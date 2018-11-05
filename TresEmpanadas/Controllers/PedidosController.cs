@@ -10,11 +10,12 @@ namespace TresEmpanadas.Controllers
     public class PedidosController : Controller
     {
         PedidoService servicioPedido = new PedidoService();
-
+        UsuarioService usuarioService = new UsuarioService();
         public ActionResult IniciarPedido()
         {
             //ViewBag.estadosPedido = servicioPedido.ListarEstadosPedidos();
             ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+            ViewBag.usuariosDisponibles = usuarioService.ListarUsuarios();
             return View();
         }
         [HttpPost]
