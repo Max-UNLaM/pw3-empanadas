@@ -16,6 +16,7 @@ namespace TresEmpanadas
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+           // Session["IdUsuario"] = string.Empty ;
         }
     }
 }

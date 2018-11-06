@@ -9,8 +9,8 @@ namespace TresEmpanadas.Services
     public class UsuarioService
     {
         Entities entities = new Entities();
-        public SelectList ListarUsuarios() {
-            var listadoUsuarios = new SelectList(entities.Usuario, "IdUsuario", "Email");
+        public MultiSelectList ListarUsuarios() {
+            var listadoUsuarios = new MultiSelectList(entities.Usuario, "IdUsuario", "Email");
             return listadoUsuarios;
         }
 

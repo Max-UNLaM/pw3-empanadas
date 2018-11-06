@@ -16,6 +16,7 @@ namespace TresEmpanadas.Controllers
             //ViewBag.estadosPedido = servicioPedido.ListarEstadosPedidos();
             ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
             ViewBag.usuariosDisponibles = usuarioService.ListarUsuarios();
+            System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
             return View();
         }
         [HttpPost]

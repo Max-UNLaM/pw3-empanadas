@@ -1,7 +1,7 @@
 ﻿@model TresEmpanadas.Pedido
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("GuardarPedido","Pedidos")) 
 {
     @Html.AntiForgeryToken()
     
@@ -37,11 +37,10 @@
     <div class="form-group">
         @Html.LabelFor(model => model.InvitacionPedido, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.DropDownList("usuariosDisponibles", (SelectList)ViewBag.usuariosDisponibles , htmlAttributes: new { @class = "form-control" } )
+            @Html.DropDownList("usuariosDisponibles", (MultiSelectList)ViewBag.usuariosDisponibles, htmlAttributes: new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.InvitacionPedido, "", new { @class = "text-danger" })
         </div>
     </div>
-
     <div class="form-group">
         @Html.LabelFor(model => model.PrecioDocena, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -60,13 +59,14 @@
     <div class="form-group">
         @Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            <select name="IdGustoEmpanada" , class="form-control">
+            <select name="IdGustoEmpanada" multiple="multiple", class="form-control">
                 <option value="-1">Seleccionar</option>
                 @foreach (var item in ((List<GustoEmpanada>)ViewBag.gustosEmpanadas))
                 {
                     <option value="@item.IdGustoEmpanada">@item.Nombre</option>
                 }
             </select>
+
         </div>
     </div>
     <div class="form-group">

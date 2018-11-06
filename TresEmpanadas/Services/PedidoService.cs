@@ -18,6 +18,13 @@ namespace TresEmpanadas.Services
         }
 
         public void GuardarPedido(Pedido pedido) {
+            var valor = System.Web.HttpContext.Current.Session["IdUsuario"] as int?;
+            pedido.IdUsuarioResponsable = (int)valor;
+            pedido.IdEstadoPedido = 1;
+            if (pedido.IdUsuarioResponsable==123)
+            {
+              
+            }
             contexto.Pedido.Add(pedido);
             contexto.SaveChanges();
         }
