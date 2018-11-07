@@ -20,8 +20,8 @@ namespace TresEmpanadas.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult GuardarPedido(Pedido pedido) {
-            servicioPedido.GuardarPedido(pedido);
+        public ActionResult GuardarPedido(Pedido pedido, int[] gustos, int[] usuariosInvitados) {
+            servicioPedido.GuardarPedido(pedido,gustos,usuariosInvitados);
             return View();
         }
 
