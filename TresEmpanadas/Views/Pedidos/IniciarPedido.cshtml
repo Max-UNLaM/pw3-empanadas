@@ -82,31 +82,37 @@
             </div>
         </div>
         <div class="col-md-6">
-                <div class="form-group">
-                    @Html.Label(" Usuarios Invitados", htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        <select name="usuariosInvitados" multiple="multiple" class="form-control" ng-list="valores">
-                            <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                            @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
-                            {
-                                <option value="@Items.Value" spellcheck="true">@Items.Text</option>
-                            }
-                        </select>
-                        <br />
-                    </div>
-
-                    Nuevo Invitado :
-
-                    @Html.TextBox("nuevoUsuario")
+            <div class="form-group">
+                @Html.Label(" Usuarios Invitados", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <select name="usuariosInvitados" multiple="multiple" class="form-control">
+                        <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
+                        <option value="" contenteditable="true" class="alert-info">Agregue un invitado</option>
+                        @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
+                        {
+                            <option value="@Items.Value" spellcheck="true">@Items.Text</option>
+                        }
+                    </select>
                     <br />
                 </div>
+
+                Nuevo Invitado :
+
+                @Html.TextBox("nuevoUsuario")
+                <br />
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear Pedido" class="btn-primary" />
-            </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Crear Pedido" class="btn-primary" />
         </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="reset" value="Cancelar" class="btn-danger" />
+        </div>
+    </div>
 </div>
         }
 
