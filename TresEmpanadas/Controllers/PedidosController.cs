@@ -25,18 +25,9 @@ namespace TresEmpanadas.Controllers
                 servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);           
             return View();
         }
-        public ActionResult listadoPedidos() {
-            var pedidoUsuario = contexto.Pedido.Join
-                               (contexto.Usuario, pedido => pedido.IdUsuarioResponsable,
-                                 usuario => usuario.IdUsuario, (pedido, usuario) => new { pedido })
-                                 .OrderByDescending(pedido => pedido.pedido.FechaCreacion)
-                                 .ToList().Where(ped => ped.pedido.IdUsuarioResponsable == 1);
-            var Pedidos = contexto.Pedido.
-                OrderByDescending(pedido => pedido.FechaCreacion).ToList()
-                .Where(pedido => pedido.IdUsuarioResponsable == 1);
-
-            ViewBag.Pedidos = Pedidos;
-            ViewBag.pedidoUsuario = pedidoUsuario;
+        public ActionResult ListadoPedidos() {
+            var listadoPedidos = servicioPedido.listadoPedidosAsociadosUsuario();
+            ViewBag.pedidosUsuario = listadoPedidos;
 
            // servicioPedido.listadoPedidosAsociadosUsuario();
             return View();

@@ -24,7 +24,7 @@
             @Html.DisplayNameFor(model => model.FechaModificacion)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.EstadoPedido.Nombre)
+            @Html.DisplayName("Estado Pedido")
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Usuario.Email)
@@ -32,7 +32,7 @@
         <th></th>
     </tr>
 
-@foreach (var item in ((IEnumerable<Pedido>)ViewBag.Pedidos)) {
+@foreach (var item in ((List<Pedido>)ViewBag.pedidosUsuario)) {
     <tr>
         <td>
             <label value =""> @item.NombreNegocio</label>
@@ -57,6 +57,12 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Usuario.Email)
+            @if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
+            {
+            @Html.ActionLink("Edit", "Edit", new { id = "IdPedido" })
+
+//@Html.Raw("link editar");
+            }
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id="IdPedido" }) |

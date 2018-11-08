@@ -18,7 +18,7 @@ namespace TresEmpanadas.Services
             return gustosEmpanadas;
         }
 
-        public void GuardarPedido(Pedido pedido , int?[] gustos , int?[] usuariosInvitados) {
+        public void GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados) {
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
             pedido.IdEstadoPedido = 1;
@@ -34,19 +34,39 @@ namespace TresEmpanadas.Services
                 contexto.InvitacionPedido.Add(invitacion);
                 contexto.SaveChanges();
             }
-            
+
             int idGenerado = pedido.IdPedido;
         }
 
-        public void listadoPedidosAsociadosUsuario() {
-            var pedidoUsuario = contexto.Pedido.Join
-                                (contexto.Usuario, pedido => pedido.IdUsuarioResponsable,
-                                  usuario => usuario.IdUsuario, (pedido, usuario) => new { pedido })
-                                  .OrderByDescending(pedido => pedido.pedido.FechaCreacion)
-                                  .ToList().Where(ped => ped.pedido.IdUsuarioResponsable  == 1);
-            var Pedidos = contexto.Pedido.
-                OrderByDescending(pedido => pedido.FechaCreacion).ToList()
-                .Where(pedido => pedido.IdUsuarioResponsable ==1);
+        public List<Pedido> listadoPedidosAsociadosUsuario() {
+            //var pedidoUsuario = contexto.Pedido.Join
+            //                    (contexto.InvitacionPedido, pedido => pedido.IdPedido,
+            //                      invitacion => invitacion.IdPedido, (pedido, invitacion) => new { pedido })
+            //                      .OrderByDescending(pedido => pedido.pedido.FechaCreacion)
+            //                      .ToList().Where(ped => ped.pedido.IdUsuarioResponsable  == 1);
+
+            List<Pedido> pedidosResultado = new List<Pedido>();
+
+            //PEDIDOS DONDE ES RESPONSABLE
+            var pedidosResponsable = contexto.Pedido
+              .Where(pedido => pedido.IdUsuarioResponsable == 3)
+              .OrderByDescending(pedido => pedido.FechaCreacion)
+              .ToList();
+
+            //inserto en mi lista resultado
+            pedidosResultado.AddRange(pedidosResponsable);
+
+
+            //PEDIDOS DONDE ES INVITADO
+            var invitacionesUsuario = contexto.InvitacionPedido
+            .Where(inv => inv.IdUsuario == 3);
+
+            foreach (var inv in invitacionesUsuario)
+            {
+                pedidosResultado.Add(inv.Pedido);
+            }
+
+            return pedidosResultado;
         }
     }
 }
