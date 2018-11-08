@@ -48,24 +48,32 @@ namespace TresEmpanadas.Services
             List<Pedido> pedidosResultado = new List<Pedido>();
 
             //PEDIDOS DONDE ES RESPONSABLE
+            int idUsuarioLogueado = (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"])) ;
             var pedidosResponsable = contexto.Pedido
-              .Where(pedido => pedido.IdUsuarioResponsable == 3)
+              .Where(pedido => pedido.IdUsuarioResponsable == idUsuarioLogueado)
               .OrderByDescending(pedido => pedido.FechaCreacion)
               .ToList();
 
             //inserto en mi lista resultado
             pedidosResultado.AddRange(pedidosResponsable);
 
-
             //PEDIDOS DONDE ES INVITADO
             var invitacionesUsuario = contexto.InvitacionPedido
-            .Where(inv => inv.IdUsuario == 3);
+            .Where(inv => inv.IdUsuario == idUsuarioLogueado).ToList();
 
             foreach (var inv in invitacionesUsuario)
             {
-                pedidosResultado.Add(inv.Pedido);
+                Boolean agregarPedido = true;
+                foreach (var pedResponsable in pedidosResponsable) {
+                    if (inv.IdPedido == pedResponsable.IdPedido) {
+                         agregarPedido = false; 
+                    }
+                }
+                if (agregarPedido) {
+                    pedidosResultado.Add(inv.Pedido);
+                }
+                
             }
-
             return pedidosResultado;
         }
     }

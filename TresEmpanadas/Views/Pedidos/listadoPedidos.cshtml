@@ -57,17 +57,16 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Usuario.Email)
-            @if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
-            {
-            @Html.ActionLink("Edit", "Edit", new { id = "IdPedido" })
-
-//@Html.Raw("link editar");
-            }
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id="IdPedido" }) |
-            @Html.ActionLink("Details", "Details", new { id="item.IdPedido" }) |
-            @Html.ActionLink("Delete", "Delete", new { id="item.IdPedido" })
+            @if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = item.IdPedido })
+
+                //@Html.Raw("link editar");
+            } |
+            @Html.ActionLink("Details", "Details", new { id = "item.IdPedido" }) |
+            @Html.ActionLink("Delete", "Delete", new { id = "item.IdPedido" })
         </td>
     </tr>
 }
