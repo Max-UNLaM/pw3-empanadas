@@ -9,15 +9,17 @@ namespace TresEmpanadas.Services
     public class PedidoService
     {
         Entities contexto = new Entities();
+                                     //Listado de Estado de los pedidos
         public List<EstadoPedido> ListarEstadosPedidos() {
             var estados = contexto.EstadoPedido.ToList();
             return estados;
         }
+                                          //Listado de gustos de empanadas
         public List<GustoEmpanada> ListarGustosEmpanadas() {
             var gustosEmpanadas = contexto.GustoEmpanada.ToList();
             return gustosEmpanadas;
         }
-
+                                                // Guardar Pedido
         public void GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados) {
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
@@ -38,6 +40,7 @@ namespace TresEmpanadas.Services
             int idGenerado = pedido.IdPedido;
         }
 
+                         // Listado de pedidos que estan asociados a un usuario
         public List<Pedido> listadoPedidosAsociadosUsuario() {
             //Ejemplo Linq Join 
             //var pedidoUsuario = contexto.Pedido.Join
@@ -84,8 +87,13 @@ namespace TresEmpanadas.Services
             //                    select o;
             //pedidosResultado = listaOrdenada.ToList<Pedido>();
 
-            
             return pedidosResultado;
         }
+
+        public Pedido BuscarPedidoPorId(int idPedido) {
+            var pedidoDetalle = contexto.Pedido.Find(idPedido);
+            return pedidoDetalle;
+        }
+
     }
 }

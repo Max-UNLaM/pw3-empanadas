@@ -10,27 +10,40 @@ namespace TresEmpanadas.Controllers
     public class PedidosController : Controller
     {
         PedidoService servicioPedido = new PedidoService();
-        UsuarioService usuarioService = new UsuarioService();
+        UsuarioService servicioUsuario = new UsuarioService();
         Entities contexto = new Entities();
+
+        // Iniciar Pedido
         public ActionResult IniciarPedido()
         {
             //ViewBag.estadosPedido = servicioPedido.ListarEstadosPedidos();
             ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-            ViewBag.usuariosDisponibles = usuarioService.ListarUsuarios();
+            ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
             System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
             return View();
-        }
+        } 
+
+        //Guardar Pedido
         [HttpPost]
         public ActionResult GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados) {
                 servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);           
             return View();
         }
+
+        //Listado Pedidos
         public ActionResult ListadoPedidos() {
             var listadoPedidos = servicioPedido.listadoPedidosAsociadosUsuario();
             ViewBag.pedidosUsuario = listadoPedidos;
-
-           // servicioPedido.listadoPedidosAsociadosUsuario();
             return View();
         }
+
+        //Detalle Pedidos
+        public ActionResult DetallePedido(int idPedido) {
+            var detallePedido = servicioPedido.BuscarPedidoPorId(idPedido);
+            ViewBag.detallePedido = detallePedido; 
+            return View(detallePedido);
+        }
+
+
     }
 }

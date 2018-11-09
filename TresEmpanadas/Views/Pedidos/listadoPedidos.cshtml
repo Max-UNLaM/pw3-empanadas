@@ -1,8 +1,6 @@
 ﻿@model IEnumerable<TresEmpanadas.Pedido>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
+
 <table class="table">
     <tr>
         <th>
@@ -41,9 +39,9 @@
                 @Html.Raw("Responsable")
             </td>
             <td>
-                @Html.ActionLink("EditarPedido", "EditarPedido", new { id = item.IdPedido })|
-                @Html.ActionLink("DetallePedido", "DetallePedido", new { id = item.IdPedido }) |
-                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdPedido })
+                @Html.ActionLink("EditarPedido", "EditarPedido", new { idPedido = item.IdPedido })|
+                @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido }) |
+                @Html.ActionLink("Eliminar", "Eliminar", new { idPedido = item.IdPedido })
             </td>
         }
         else
@@ -52,16 +50,10 @@
                 @Html.Raw("Invitado")
             </td>
             <td>
-                @Html.ActionLink("DetallePedido", "DetallePedido", new { id = item.IdPedido })
+                @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido })
             </td>
         }
 
-            @*@if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
-            {
-                @Html.ActionLink("EditarPedido", "EditarPedido", new { id = item.IdPedido })
-
-                //@Html.Raw("link editar");
-            } |*@
 
         
     </tr>
