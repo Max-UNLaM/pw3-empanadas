@@ -39,11 +39,13 @@ namespace TresEmpanadas.Services
         }
 
         public List<Pedido> listadoPedidosAsociadosUsuario() {
+            //Ejemplo Linq Join 
             //var pedidoUsuario = contexto.Pedido.Join
             //                    (contexto.InvitacionPedido, pedido => pedido.IdPedido,
             //                      invitacion => invitacion.IdPedido, (pedido, invitacion) => new { pedido })
-            //                      .OrderByDescending(pedido => pedido.pedido.FechaCreacion)
-            //                      .ToList().Where(ped => ped.pedido.IdUsuarioResponsable  == 1);
+            //                     .OrderByDescending(pedido => pedido.pedido.FechaCreacion)
+            //                     .Where(ped => ped.pedido.IdUsuarioResponsable  == 1).ToList();
+
 
             List<Pedido> pedidosResultado = new List<Pedido>();
 
@@ -74,6 +76,15 @@ namespace TresEmpanadas.Services
                 }
                 
             }
+                            ////Si quiero ordenar la lista completa
+
+            //List<Pedido> listaordenada = new List<Pedido>();
+            //var listaOrdenada = from o in pedidosResultado
+            //                    orderby o.FechaCreacion descending
+            //                    select o;
+            //pedidosResultado = listaOrdenada.ToList<Pedido>();
+
+            
             return pedidosResultado;
         }
     }

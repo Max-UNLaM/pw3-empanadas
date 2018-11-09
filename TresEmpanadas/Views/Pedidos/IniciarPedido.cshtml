@@ -11,7 +11,7 @@
     <div class="form-row">
         <div class="form-group">
             @Html.LabelFor(model => model.NombreNegocio, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-12">
                 @Html.EditorFor(model => model.NombreNegocio, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.NombreNegocio, "", new { @class = "text-danger" })
             </div>
@@ -19,7 +19,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-12">
                 @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
             </div>
@@ -28,7 +28,7 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.PrecioUnidad, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-12">
                 @Html.EditorFor(model => model.PrecioUnidad, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.PrecioUnidad, "", new { @class = "text-danger" })
             </div>
@@ -41,35 +41,36 @@
                     @Html.ValidationMessageFor(model => model.InvitacionPedido, "", new { @class = "text-danger" })
                 </div>
             </div>*@
-        <div class="form-group">
-            @Html.LabelFor(model => model.PrecioDocena, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PrecioDocena, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PrecioDocena, "", new { @class = "text-danger" })
-            </div>
-        </div>
+
     </div>
     <div class="form-row">
         <div class="form-group">
             @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-12">
                 @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(model => model.FechaModificacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <div class="col-md-12">
                 @Html.EditorFor(model => model.FechaModificacion, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FechaModificacion, "", new { @class = "text-danger" })
             </div>
         </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrecioDocena, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.PrecioDocena, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PrecioDocena, "", new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
-    <div class="row">
+    <div class="form-row">
         <div class="col-md-6">
             <div class="form-group">
                 @Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <select name="gustos[]" multiple="multiple" , class="form-control">
                         <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
                         @foreach (var item in ((List<GustoEmpanada>)ViewBag.gustosEmpanadas))
@@ -83,8 +84,8 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                @Html.Label(" Usuarios Invitados", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
+                @Html.Label(" UsuariosInvitados", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
                     <select name="usuariosInvitados" multiple="multiple" class="form-control">
                         <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
                         <option value="" contenteditable="true" class="alert-info">Agregue un invitado</option>
@@ -111,6 +112,11 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="reset" value="Cancelar" class="btn-danger" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <p><a href="~/Pedidos/ListadoPedidos" class="btn btn-primary btn-lg">Listado Pedidos &raquo;</a></p>
         </div>
     </div>
 </div>

@@ -9,66 +9,63 @@
             @Html.DisplayNameFor(model => model.NombreNegocio)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioUnidad)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PrecioDocena)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.FechaCreacion)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FechaModificacion)
         </th>
         <th>
             @Html.DisplayName("Estado Pedido")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Usuario.Email)
+            @Html.DisplayName("Rol")
+        </th>
+        <th>
+            @Html.DisplayName("Acciones")
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in ((List<Pedido>)ViewBag.pedidosUsuario)) {
+    @foreach (var item in ((List<Pedido>)ViewBag.pedidosUsuario))
+    {
     <tr>
         <td>
-            <label value =""> @item.NombreNegocio</label>
-        </td>
-        <td>
-            <label value="">@item.Descripcion</label>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioUnidad)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PrecioDocena)
+            <label value=""> @item.NombreNegocio</label>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.FechaCreacion)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FechaModificacion)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.EstadoPedido.Nombre)
         </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Usuario.Email)
-        </td>
-        <td>
-            @if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
+        @if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
+        {
+            <td>
+                @Html.Raw("Responsable")
+            </td>
+            <td>
+                @Html.ActionLink("EditarPedido", "EditarPedido", new { id = item.IdPedido })|
+                @Html.ActionLink("DetallePedido", "DetallePedido", new { id = item.IdPedido }) |
+                @Html.ActionLink("Eliminar", "Eliminar", new { id = item.IdPedido })
+            </td>
+        }
+        else
+        {
+            <td>
+                @Html.Raw("Invitado")
+            </td>
+            <td>
+                @Html.ActionLink("DetallePedido", "DetallePedido", new { id = item.IdPedido })
+            </td>
+        }
+
+            @*@if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
             {
-                @Html.ActionLink("Edit", "Edit", new { id = item.IdPedido })
+                @Html.ActionLink("EditarPedido", "EditarPedido", new { id = item.IdPedido })
 
                 //@Html.Raw("link editar");
-            } |
-            @Html.ActionLink("Details", "Details", new { id = "item.IdPedido" }) |
-            @Html.ActionLink("Delete", "Delete", new { id = "item.IdPedido" })
-        </td>
+            } |*@
+
+        
     </tr>
-}
+    }
 
 </table>
+<p><a href="~/Pedidos/IniciarPedido" class="btn btn-primary btn-lg">Nuevo &raquo;</a></p>
