@@ -1,0 +1,66 @@
+﻿@model TresEmpanadas.Pedido
+
+<div class="text-sm-center">
+
+    <h4>Pedido</h4>
+    <hr />
+    <div class="form-row">
+        <div class="col-md-4">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.NombreNegocio)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.NombreNegocio)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </dt>
+
+
+                <dd>
+                    @Html.DisplayFor(model => model.Descripcion)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.PrecioUnidad)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.PrecioUnidad)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.PrecioDocena)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.PrecioDocena)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaCreacion)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FechaCreacion)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FechaModificacion)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FechaModificacion)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+               
+
+              
+
+               
+               
+                
+               
+            </dl>
+        </div>
+    </div>
+</div>
+<p><a href="~/Pedidos/ListadoPedidos" class="btn btn-primary btn-lg">Ir a Lista de Pedidos &raquo;</a></p>
+
