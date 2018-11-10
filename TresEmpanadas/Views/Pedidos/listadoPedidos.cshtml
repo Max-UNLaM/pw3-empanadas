@@ -41,7 +41,9 @@
             <td>
                 @Html.ActionLink("EditarPedido", "EditarPedido", new { idPedido = item.IdPedido })|
                 @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido }) |
-                @Html.ActionLink("Eliminar", "Eliminar", new { idPedido = item.IdPedido })
+                @Html.ActionLink("Elegir Gustos", "ElegirGustos", new { idPedido = item.IdPedido }) |
+                @Html.ActionLink("Eliminar", "Eliminar", new { idPedido = item.IdPedido })|
+                @Html.ActionLink("Clonar Pedido", "IniciarPedido", new { idPedido = item.IdPedido })
             </td>
         }
         else
@@ -50,7 +52,8 @@
                 @Html.Raw("Invitado")
             </td>
             <td>
-                @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido })
+                @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido })|
+                @Html.ActionLink("Clonar Pedido", "IniciarPedido", new { idPedido = item.IdPedido })
             </td>
         }
 

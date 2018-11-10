@@ -71,15 +71,49 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-12">
-                    <select name="gustos[]" multiple="multiple" , class="form-control">
+                    <select name="gustos[]" multiple="multiple" size="7" class="form-control">
                         <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
                         @foreach (var item in ((List<GustoEmpanada>)ViewBag.gustosEmpanadas))
                         {
-                            <option value="@item.IdGustoEmpanada">@item.Nombre</option>
+                            if (ViewBag.conModelo)
+                            {
+                                Boolean fueSeleccionado = false;
+                                foreach (var item2 in (Model.GustoEmpanada))
+                                {
+                                    if (item.IdGustoEmpanada == item2.IdGustoEmpanada)
+                                    {
+                                        fueSeleccionado = true;
+                                    }
+                                }
+                                if (fueSeleccionado)
+                                {
+                                    <option value="@item.IdGustoEmpanada" selected>@item.Nombre</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdGustoEmpanada">@item.Nombre</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="@item.IdGustoEmpanada">@item.Nombre</option>
+                            }
+
                         }
                     </select>
 
                 </div>
+                @*@Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    <select name="gustos[]" multiple="multiple" size="7" class="form-control">
+                        <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
+                        @foreach (var item in (Model.GustoEmpanada))
+                        {
+                            <option value="@item.IdGustoEmpanada" selected>@item.Nombre</option>
+                        }
+                    </select>
+
+                </div>*@
             </div>
         </div>
         <div class="col-md-6">
@@ -88,7 +122,6 @@
                 <div class="col-md-12">
                     <select name="usuariosInvitados" multiple="multiple" class="form-control">
                         <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                        <option value="" contenteditable="true" class="alert-info">Agregue un invitado</option>
                         @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
                         {
                             <option value="@Items.Value" spellcheck="true">@Items.Text</option>

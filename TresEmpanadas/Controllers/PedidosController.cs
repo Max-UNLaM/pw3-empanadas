@@ -14,25 +14,34 @@ namespace TresEmpanadas.Controllers
         Entities contexto = new Entities();
 
         // Iniciar Pedido
-        public ActionResult IniciarPedido()
+        public ActionResult IniciarPedido(int? idPedido)
         {
-            //ViewBag.estadosPedido = servicioPedido.ListarEstadosPedidos();
+            System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
             ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
             ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
-            System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
-            return View();
+            if (idPedido == null)
+            {
+                ViewBag.conModelo = false;
+                return View();
+            }
+            else {
+                ViewBag.conModelo = true;
+                int idParametro = (int)idPedido;
+                Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
+                return View(pedidoBuscado);
+            }
         } 
 
         //Guardar Pedido
         [HttpPost]
         public ActionResult GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados) {
                 servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);           
-            return View();
+            return View("PedidoIniciado");
         }
 
         //Listado Pedidos
         public ActionResult ListadoPedidos() {
-            var listadoPedidos = servicioPedido.listadoPedidosAsociadosUsuario();
+            var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
             ViewBag.pedidosUsuario = listadoPedidos;
             return View();
         }

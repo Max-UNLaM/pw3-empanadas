@@ -290,6 +290,8 @@
     <Content Include="Views\Pedidos\IniciarPedido.cshtml" />
     <Content Include="Views\Pedidos\listadoPedidos.cshtml" />
     <Content Include="Views\Pedidos\DetallePedido.cshtml" />
+    <Content Include="Views\Pedidos\ClonarPedido.cshtml" />
+    <Content Include="Views\Pedidos\PedidoIniciado.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

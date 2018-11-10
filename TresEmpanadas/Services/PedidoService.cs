@@ -41,7 +41,7 @@ namespace TresEmpanadas.Services
         }
 
                          // Listado de pedidos que estan asociados a un usuario
-        public List<Pedido> listadoPedidosAsociadosUsuario() {
+        public List<Pedido> ListadoPedidosAsociadosUsuario() {
             //Ejemplo Linq Join 
             //var pedidoUsuario = contexto.Pedido.Join
             //                    (contexto.InvitacionPedido, pedido => pedido.IdPedido,
