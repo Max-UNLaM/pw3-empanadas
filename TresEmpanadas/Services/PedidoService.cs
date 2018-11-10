@@ -90,6 +90,37 @@ namespace TresEmpanadas.Services
             return pedidosResultado;
         }
 
+        internal void EliminarPedido(int idPedido)
+        {
+            // Trae las invitaciones que tiene un pedido
+            var listaInvitacionesPedido = contexto.InvitacionPedido.Where(inv => inv.IdPedido == idPedido).ToList();
+            foreach (var item in listaInvitacionesPedido) {
+                InvitacionPedido invitacionEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedido);
+                if (invitacionEliminar != null)
+                {
+                    contexto.InvitacionPedido.Remove(invitacionEliminar);
+                    contexto.SaveChanges();
+                }
+            }
+            // Trae las invitaciones con gustos de empanada por usuario
+            var listaInvitacionGustoEmpanadaPedido = contexto.InvitacionPedidoGustoEmpanadaUsuario
+                                                     .Where(invUsuPed => invUsuPed.IdPedido == idPedido).ToList();
+            foreach (var item in listaInvitacionGustoEmpanadaPedido)
+            {
+                InvitacionPedido invitacionGustoUsuarioEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
+                if (invitacionGustoUsuarioEliminar != null)
+                {
+                    contexto.InvitacionPedido.Remove(invitacionGustoUsuarioEliminar);
+                    contexto.SaveChanges();
+                }
+            }
+
+            Pedido pedidoEliminar = contexto.Pedido.Find(idPedido);
+            contexto.Pedido.Remove(pedidoEliminar);
+            contexto.SaveChanges();
+            //throw new NotImplementedException();
+        }
+
         public Pedido BuscarPedidoPorId(int idPedido) {
             var pedidoDetalle = contexto.Pedido.Find(idPedido);
             return pedidoDetalle;

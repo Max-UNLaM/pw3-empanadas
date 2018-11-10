@@ -11,7 +11,7 @@ namespace TresEmpanadas.Controllers
     {
         PedidoService servicioPedido = new PedidoService();
         UsuarioService servicioUsuario = new UsuarioService();
-        Entities contexto = new Entities();
+        //Entities contexto = new Entities();
 
         // Iniciar Pedido
         public ActionResult IniciarPedido(int? idPedido)
@@ -53,6 +53,11 @@ namespace TresEmpanadas.Controllers
             return View(detallePedido);
         }
 
+        //Eliminar Pedidos
+        public RedirectToRouteResult EliminarPedido(int idPedido) {
+           servicioPedido.EliminarPedido(idPedido);
+            return RedirectToAction("ListadoPedidos");
+        }
 
     }
 }

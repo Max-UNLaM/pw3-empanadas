@@ -39,11 +39,11 @@
                 @Html.Raw("Responsable")
             </td>
             <td>
-                @Html.ActionLink("EditarPedido", "EditarPedido", new { idPedido = item.IdPedido })|
-                @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido }) |
+                @Html.ActionLink("Editar", "EditarPedido", new { idPedido = item.IdPedido })|
+                @Html.ActionLink("Detalle", "DetallePedido", new { idPedido = item.IdPedido }) |
                 @Html.ActionLink("Elegir Gustos", "ElegirGustos", new { idPedido = item.IdPedido }) |
-                @Html.ActionLink("Eliminar", "Eliminar", new { idPedido = item.IdPedido })|
-                @Html.ActionLink("Clonar Pedido", "IniciarPedido", new { idPedido = item.IdPedido })
+                @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.IdPedido })|
+                @Html.ActionLink("Clonar", "IniciarPedido", new { idPedido = item.IdPedido })
             </td>
         }
         else
