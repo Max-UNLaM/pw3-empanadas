@@ -245,8 +245,8 @@
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
     <Content Include="Models\prueb1.cshtml" />
-    <Content Include="Connection.config">
-      <SubType>Designer</SubType>
+    <Content Include="..\.gitignore">
+      <Link>.gitignore</Link>
     </Content>
     <None Include="Connection.config.example" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
