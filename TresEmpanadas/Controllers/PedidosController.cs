@@ -47,9 +47,20 @@ namespace TresEmpanadas.Controllers
         }
 
         //Detalle Pedidos
-        public ActionResult DetallePedido(int idPedido) {
-            var detallePedido = servicioPedido.BuscarPedidoPorId(idPedido);
-            ViewBag.detallePedido = detallePedido; 
+        public ActionResult DetallePedido(int? idPedido) {
+            int idRecibido =  (int)TempData["idPedido"];
+            Pedido detallePedido;
+            if (idPedido != null)
+            {
+                detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
+            }
+            else if (idRecibido > 0)
+            {
+                detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
+            }else {
+                return View();
+            }
+            ViewBag.detallePedido = detallePedido;
             return View(detallePedido);
         }
 
@@ -59,5 +70,25 @@ namespace TresEmpanadas.Controllers
             return RedirectToAction("ListadoPedidos");
         }
 
+        public ActionResult EditarPedido(int idPedido) {
+            Boolean estadoPedido = servicioPedido.EstadoPedido(idPedido);
+            if (estadoPedido)
+            {
+                System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                ViewBag.conModelo = true;
+                int idParametro = (int)idPedido;
+                Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
+                return View(pedidoBuscado);
+            }
+            else {
+                //var detallePedido = servicioPedido.BuscarPedidoPorId(idPedido);
+                //ViewBag.detallePedido = detallePedido;
+                //return View("",detallePedido);
+                TempData["idPedido"] = idPedido; 
+                return RedirectToAction("DetallePedido");
+            }
+        }
     }
 }

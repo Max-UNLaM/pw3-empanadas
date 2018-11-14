@@ -90,6 +90,27 @@ namespace TresEmpanadas.Services
             return pedidosResultado;
         }
 
+        public Pedido EditarPedido(int idPedido)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EstadoPedido(int idPedido)
+        {
+            bool estado;
+            Pedido pedidoBuscado = BuscarPedidoPorId(idPedido);
+            String nombreEstado = pedidoBuscado.EstadoPedido.Nombre;
+            if (nombreEstado.Equals("Abierto"))
+            {
+                estado = true;
+            }
+            else{
+                estado = false;
+            }
+            
+            return estado;
+        }
+
         internal void EliminarPedido(int idPedido)
         {
             // Trae las invitaciones que tiene un pedido

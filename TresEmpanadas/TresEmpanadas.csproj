@@ -302,6 +302,7 @@
     <Content Include="Views\Shared\_BaseLayout.cshtml" />
     <Content Include="Views\Shared\_UsuarioLayout.cshtml" />
     <Content Include="Views\Shared\_AnonimoLayout.cshtml" />
+    <Content Include="Views\Pedidos\EditarPedido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
