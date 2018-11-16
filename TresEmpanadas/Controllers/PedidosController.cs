@@ -41,9 +41,16 @@ namespace TresEmpanadas.Controllers
 
         //Listado Pedidos
         public ActionResult ListadoPedidos() {
-            var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
-            ViewBag.pedidosUsuario = listadoPedidos;
-            return View();
+            f(Session["idUsuario"] != null)
+            {
+                var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
+                ViewBag.pedidosUsuario = listadoPedidos;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
         }
 
         //Detalle Pedidos
