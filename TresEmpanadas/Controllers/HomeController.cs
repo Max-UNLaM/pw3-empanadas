@@ -10,9 +10,7 @@ namespace TresEmpanadas.Controllers
     {
         public ActionResult Index()
         {
-            var usuario = false;
-
-            return View(usuario);
+            return View();
         }
       
         public ActionResult About()

@@ -1,7 +1,8 @@
 ﻿@{
     ViewBag.Title = "Home Page";
-    @model bool
-    if (Model)
+    var user = Session["idUsuario"];
+
+    if (user != null)
     {
         Layout = "~/Views/Shared/_UsuarioLayout.cshtml";
     } else
