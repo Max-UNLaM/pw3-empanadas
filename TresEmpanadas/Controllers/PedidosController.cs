@@ -4,10 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using TresEmpanadas.Services;
-
 namespace TresEmpanadas.Controllers
 {
-    public class PedidosController : Controller
+    public class PedidosController : Controller 
     {
         PedidoService servicioPedido = new PedidoService();
         UsuarioService servicioUsuario = new UsuarioService();
@@ -47,28 +46,51 @@ namespace TresEmpanadas.Controllers
         }
 
         //Detalle Pedidos
-        public ActionResult DetallePedido(int? idPedido) {
-            int idRecibido =  (int)TempData["idPedido"];
-            Pedido detallePedido;
-            if (idPedido != null)
-            {
-                detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
-            }
-            else if (idRecibido > 0)
-            {
-                detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
-            }else {
-                return View();
-            }
-            ViewBag.detallePedido = detallePedido;
-            return View(detallePedido);
+        public ActionResult DetallePedido(int? idPedido) {                      
+                Pedido detallePedido;
+                if (idPedido != null)
+                {
+                     detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
+                }else{
+                    int idRecibido = (int)TempData["idPedido"];
+                    if (idRecibido > 0)
+                    {
+                        detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                }
+                ViewBag.detallePedido = detallePedido;
+                return View(detallePedido);
+            
         }
 
         //Eliminar Pedidos
-        public RedirectToRouteResult EliminarPedido(int idPedido) {
+        public RedirectToRouteResult Eliminar(int idPedido) {
            servicioPedido.EliminarPedido(idPedido);
             return RedirectToAction("ListadoPedidos");
         }
+        public ActionResult EliminarPedido(int idPedido) {
+            var pedido = servicioPedido.BuscarPedidoPorId(idPedido);
+            var invitacionesConfirmadas = servicioPedido.BuscarInvitacionesConfirmadas(idPedido);
+            ViewBag.cantidadInvitaciones = invitacionesConfirmadas;
+            return View(pedido);
+        }
+                    // Eliminar con JavaScrit
+        //[HttpGet]
+        //public ActionResult Eliminar(int? idPedido)
+        //{
+        //    var valor = idPedido;
+        //    var result = 0;
+        //    if (valor != null) {
+        //        servicioPedido.EliminarPedido((int)valor);
+        //        // return RedirectToAction("ListadoPedidos");
+        //        result = 1;
+        //    }
+        //    return Json(result, JsonRequestBehavior.AllowGet);
+        //}
 
         public ActionResult EditarPedido(int idPedido) {
             Boolean estadoPedido = servicioPedido.EstadoPedido(idPedido);
