@@ -26,8 +26,10 @@ namespace TresEmpanadas
         public int IdUsuario { get; set; }
         [Required]
         [EmailAddress(ErrorMessage = "El E-mail es inválido")]
+        [StringLength(300, ErrorMessage = "Has excedido la cantidad de caracteres permitidos.")]
         public string Email { get; set; }
         [Required]
+        [StringLength(50, ErrorMessage = "Has excedido la cantidad de caracteres permitidos.")]
         public string Password { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
