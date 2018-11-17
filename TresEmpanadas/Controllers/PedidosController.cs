@@ -49,7 +49,7 @@ namespace TresEmpanadas.Controllers
             }
             else
             {
-                return Redirect("/Login/Index?redirigir=/Pedidos/listadoPedidos/");
+                return Redirect("/Home/Login?redirigir=/Pedidos/listadoPedidos/");
             }
         }
 
