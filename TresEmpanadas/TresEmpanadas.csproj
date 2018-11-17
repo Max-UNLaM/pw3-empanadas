@@ -244,12 +244,12 @@
     <Content Include="Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>
     </Content>
-    <Content Include="Models\prueb1.cshtml" />
     <Content Include="..\.gitignore">
       <Link>.gitignore</Link>
     </Content>
     <None Include="Connection.config.example" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\JavaScript.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -302,9 +302,12 @@
     <Content Include="Views\Shared\_BaseLayout.cshtml" />
     <Content Include="Views\Shared\_UsuarioLayout.cshtml" />
     <Content Include="Views\Shared\_AnonimoLayout.cshtml" />
+    <Content Include="Views\Pedidos\EditarPedido.cshtml" />
+    <Content Include="Views\Pedidos\EliminarPedido.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
