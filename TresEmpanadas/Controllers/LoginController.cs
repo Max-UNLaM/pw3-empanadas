@@ -14,7 +14,12 @@ namespace TresEmpanadas.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            return View();
+            if (Session["idUsuario"] == null)
+            {
+                return View();
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
@@ -26,18 +31,30 @@ namespace TresEmpanadas.Controllers
 
                 if(!usuarioEncontrado) {
                     ViewBag.msg = "Usuario y/o Contraseña inválidos.";
+
+                    return View();
+                }
+                else
+                {
+                    if(Request.QueryString["redirigir"] != null)
+                    {
+                        return Redirect(Request.QueryString["redirigir"]);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 
-                return View();
             }
 
-            return Redirect("/Home/Index");
+            return View();
         }
 
         public ActionResult Logout()
         {
             Session.Clear();
-            return Redirect("/Login/Index");
+            return RedirectToAction("Index", "Login");
         }
     }
 }
