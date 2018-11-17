@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TresEmpanadas.Api.Models;
 
 namespace TresEmpanadas.Services
 {
@@ -27,7 +28,7 @@ namespace TresEmpanadas.Services
             contexto.Pedido.Add(pedido);
             contexto.SaveChanges();
             foreach (var item in usuariosInvitados) {
-                InvitacionPedido invitacion = new InvitacionPedido();
+                InvitacionPedidoService invitacion = new InvitacionPedidoService();
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
                 invitacion.IdUsuario = (int)item;
@@ -90,12 +91,54 @@ namespace TresEmpanadas.Services
             return pedidosResultado;
         }
 
+        public Boolean ConfirmarPedido(ConfirmarPedido confirmarPedido)
+        {
+            LimpiarGustosPedido(confirmarPedido.)
+        }
+
+        public Boolean AgregarGustoAInvitacion(InvitacionPedidoGustoEmpanadaUsuario inv)
+        {
+            var ipgeu = contexto.InvitacionPedidoGustoEmpanadaUsuario;
+            Pedido pedido = contexto.Pedido.Single(p => p.IdPedido == inv.IdPedido);
+            if (!PedidoAbierto(pedido))
+            {
+                return false;
+            }
+            ipgeu.Add(inv);
+            return true;
+        }
+
+        public Boolean LimpiarGustosPedido(int idPedido)
+        {
+            var ipgeu = contexto.InvitacionPedidoGustoEmpanadaUsuario;
+            Pedido pedido = contexto.Pedido.Single(p => p.IdPedido == idPedido);
+            if (!PedidoAbierto(pedido))
+            {
+                return false;
+            }
+            List<InvitacionPedidoGustoEmpanadaUsuario> actual = ipgeu.Where(
+                invi => invi.IdPedido == pedido.IdPedido).ToList();
+            actual.ForEach(invi => ipgeu.Remove(invi));
+            return true;
+        }
+
+        internal Boolean PedidoAbierto(int idPedido)
+        {
+            var pedido = contexto.Pedido.Find(idPedido);
+            return pedido.IdEstadoPedido == 1 ? true : false;
+        }
+
+        internal Boolean PedidoAbierto(Pedido pedido)
+        {
+            return pedido.IdEstadoPedido == 1 ? true : false;
+        }
+
         internal void EliminarPedido(int idPedido)
         {
             // Trae las invitaciones que tiene un pedido
             var listaInvitacionesPedido = contexto.InvitacionPedido.Where(inv => inv.IdPedido == idPedido).ToList();
             foreach (var item in listaInvitacionesPedido) {
-                InvitacionPedido invitacionEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedido);
+                var invitacionEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedido);
                 if (invitacionEliminar != null)
                 {
                     contexto.InvitacionPedido.Remove(invitacionEliminar);
@@ -107,7 +150,7 @@ namespace TresEmpanadas.Services
                                                      .Where(invUsuPed => invUsuPed.IdPedido == idPedido).ToList();
             foreach (var item in listaInvitacionGustoEmpanadaPedido)
             {
-                InvitacionPedido invitacionGustoUsuarioEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
+                var invitacionGustoUsuarioEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
                 if (invitacionGustoUsuarioEliminar != null)
                 {
                     contexto.InvitacionPedido.Remove(invitacionGustoUsuarioEliminar);
