@@ -4,12 +4,12 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c0d415354ed04f3e818a15aa27e540b9" Name="Diagram1" ZoomLevel="98">
-        <EntityTypeShape EntityType="C_TPModel.EstadoPedido" Width="1.5" PointX="3.25" PointY="8.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="C_TPModel.GustoEmpanada" Width="1.5" PointX="9.875" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="C_TPModel.InvitacionPedido" Width="2" PointX="7.625" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="C_TPModel.InvitacionPedidoGustoEmpanadaUsuario" Width="3.125" PointX="8.75" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="C_TPModel.Pedido" Width="2" PointX="4.625" PointY="0.875" IsExpanded="true" />
+      <Diagram DiagramId="c0d415354ed04f3e818a15aa27e540b9" Name="Diagram1">
+        <EntityTypeShape EntityType="C_TPModel.EstadoPedido" Width="1.5" PointX="0.75" PointY="7.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="C_TPModel.GustoEmpanada" Width="2.5" PointX="7.125" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="C_TPModel.InvitacionPedido" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="C_TPModel.InvitacionPedidoGustoEmpanadaUsuario" Width="1.5" PointX="6.25" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="C_TPModel.Pedido" Width="2" PointX="2.125" PointY="0.625" IsExpanded="true" />
         <EntityTypeShape EntityType="C_TPModel.Usuario" Width="1.5" PointX="0.5" PointY="4" IsExpanded="true" />
         <AssociationConnector Association="C_TPModel.FK_Pedido_EstadoPedido" ManuallyRouted="false" />
         <AssociationConnector Association="C_TPModel.FK_InvitacionPedidoGustoEmpanadaUsuario_GustoEmpanada" ManuallyRouted="false" />

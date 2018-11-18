@@ -25,6 +25,10 @@ namespace TresEmpanadas.Services
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
             pedido.IdEstadoPedido = 1;
+            foreach (var item in gustos) {
+                GustoEmpanada gustoEmpanada = contexto.GustoEmpanada.Find(item);
+                pedido.GustoEmpanada.Add(gustoEmpanada);       
+            }
             contexto.Pedido.Add(pedido);
             contexto.SaveChanges();
             foreach (var item in usuariosInvitados) {
@@ -37,7 +41,7 @@ namespace TresEmpanadas.Services
                 contexto.InvitacionPedido.Add(invitacion);
                 contexto.SaveChanges();
             }
-
+            
             int idGenerado = pedido.IdPedido;
         }
 
@@ -91,11 +95,6 @@ namespace TresEmpanadas.Services
             return pedidosResultado;
         }
 
-        public Boolean ConfirmarPedido(ConfirmarPedido confirmarPedido)
-        {
-            LimpiarGustosPedido(confirmarPedido.)
-        }
-
         public Boolean AgregarGustoAInvitacion(InvitacionPedidoGustoEmpanadaUsuario inv)
         {
             var ipgeu = contexto.InvitacionPedidoGustoEmpanadaUsuario;
@@ -131,6 +130,26 @@ namespace TresEmpanadas.Services
         internal Boolean PedidoAbierto(Pedido pedido)
         {
             return pedido.IdEstadoPedido == 1 ? true : false;
+
+        public Pedido EditarPedido(int idPedido)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EstadoPedido(int idPedido)
+        {
+            bool estado;
+            Pedido pedidoBuscado = BuscarPedidoPorId(idPedido);
+            String nombreEstado = pedidoBuscado.EstadoPedido.Nombre;
+            if (nombreEstado.Equals("Abierto"))
+            {
+                estado = true;
+            }
+            else{
+                estado = false;
+            }
+            
+            return estado;
         }
 
         internal void EliminarPedido(int idPedido)
@@ -157,11 +176,21 @@ namespace TresEmpanadas.Services
                     contexto.SaveChanges();
                 }
             }
-
+           
+            //Traigo el pedido que voy a eliminar
             Pedido pedidoEliminar = contexto.Pedido.Find(idPedido);
+            // Borra todos los registros de gustos de empanadas de ese pedido
+            pedidoEliminar.GustoEmpanada.Clear();
+            //Borra el pedido y guarda los cambios
             contexto.Pedido.Remove(pedidoEliminar);
             contexto.SaveChanges();
             //throw new NotImplementedException();
+        }
+
+        public int BuscarInvitacionesConfirmadas(int idPedido) {
+            var listaInvitacionGustoEmpanadaPedido = contexto.InvitacionPedido
+                                                    .Where(invUsuPed => invUsuPed.IdPedido == idPedido && invUsuPed.Completado == true).Count();
+            return listaInvitacionGustoEmpanadaPedido;
         }
 
         public Pedido BuscarPedidoPorId(int idPedido) {
