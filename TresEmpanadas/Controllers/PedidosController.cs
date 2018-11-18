@@ -39,13 +39,20 @@ namespace TresEmpanadas.Controllers
         }
 
         //Listado Pedidos
-        public ActionResult ListadoPedidos() {
-            ViewBag.pedidoEliminado = Session["pedidoEliminado"];
-            //Session["pedidoEliminado"] = null;
-            Session.Remove("pedidoEliminado");
-            var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
-            ViewBag.pedidosUsuario = listadoPedidos;
-            return View();
+        public ActionResult ListadoPedidos() {  
+            if(Session["idUsuario"] != null)
+            {
+                ViewBag.pedidoEliminado = Session["pedidoEliminado"];
+                //Session["pedidoEliminado"] = null;
+                Session.Remove("pedidoEliminado");
+                var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
+                ViewBag.pedidosUsuario = listadoPedidos;
+                return View();
+            }
+            else
+            {
+                return Redirect("/Home/Login?redirigir=/Pedidos/listadoPedidos/");
+            }
         }
 
         //Detalle Pedidos
