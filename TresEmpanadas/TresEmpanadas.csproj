@@ -291,6 +291,7 @@
     </Content>
     <Content Include="..\.gitignore">
       <Link>.gitignore</Link>
+	</Content>
     <Content Include="Connection.config">
       <SubType>Designer</SubType>
     </Content>
