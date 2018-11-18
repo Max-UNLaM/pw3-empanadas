@@ -9,17 +9,17 @@ namespace TresEmpanadas.Services
 {
     public class PedidoService
     {
-        Entities contexto = new Entities();
+        Entities Contexto = new Entities();
         //Listado de Estado de los pedidos
         public List<EstadoPedido> ListarEstadosPedidos()
         {
-            var estados = contexto.EstadoPedido.ToList();
+            var estados = Contexto.EstadoPedido.ToList();
             return estados;
         }
         //Listado de gustos de empanadas
         public List<GustoEmpanada> ListarGustosEmpanadas()
         {
-            var gustosEmpanadas = contexto.GustoEmpanada.ToList();
+            var gustosEmpanadas = Contexto.GustoEmpanada.ToList();
             return gustosEmpanadas;
         }
         // Guardar Pedido
@@ -30,21 +30,21 @@ namespace TresEmpanadas.Services
             pedido.IdEstadoPedido = 1;
             foreach (var item in gustos)
             {
-                GustoEmpanada gustoEmpanada = contexto.GustoEmpanada.Find(item);
+                GustoEmpanada gustoEmpanada = Contexto.GustoEmpanada.Find(item);
                 pedido.GustoEmpanada.Add(gustoEmpanada);
             }
-            contexto.Pedido.Add(pedido);
-            contexto.SaveChanges();
+            Contexto.Pedido.Add(pedido);
+            Contexto.SaveChanges();
             foreach (var item in usuariosInvitados)
             {
-                InvitacionPedidoService invitacion = new InvitacionPedidoService();
+                var invitacion = new InvitacionPedido();
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
                 invitacion.IdUsuario = (int)item;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
-                contexto.InvitacionPedido.Add(invitacion);
-                contexto.SaveChanges();
+                Contexto.InvitacionPedido.Add(invitacion);
+                Contexto.SaveChanges();
             }
 
             int idGenerado = pedido.IdPedido;
@@ -65,7 +65,7 @@ namespace TresEmpanadas.Services
 
             //PEDIDOS DONDE ES RESPONSABLE
             int idUsuarioLogueado = (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]));
-            var pedidosResponsable = contexto.Pedido
+            var pedidosResponsable = Contexto.Pedido
               .Where(pedido => pedido.IdUsuarioResponsable == idUsuarioLogueado)
               .OrderByDescending(pedido => pedido.FechaCreacion)
               .ToList();
@@ -74,7 +74,7 @@ namespace TresEmpanadas.Services
             pedidosResultado.AddRange(pedidosResponsable);
 
             //PEDIDOS DONDE ES INVITADO
-            var invitacionesUsuario = contexto.InvitacionPedido
+            var invitacionesUsuario = Contexto.InvitacionPedido
             .Where(inv => inv.IdUsuario == idUsuarioLogueado).ToList();
 
             foreach (var inv in invitacionesUsuario)
@@ -106,13 +106,32 @@ namespace TresEmpanadas.Services
 
         public Boolean ConfirmarPedido(ConfirmarPedido confirmarPedido)
         {
-            LimpiarGustosPedido(confirmarPedido);
+            UsuarioService usuarioService = new UsuarioService();
+            var gustoEmpanadaContext = Contexto.GustoEmpanada;
+            var invitacionPedido = Contexto.InvitacionPedido.Single(ip => ip.Token == confirmarPedido.TokenInvitacion);
+            var pedido = Contexto.Pedido.Single(ped => ped.IdPedido == invitacionPedido.IdPedido);
+            if (!PedidoAbierto(pedido))
+            {
+                return false;
+            }
+            LimpiarGustosPedido(pedido.IdPedido);
+            foreach (var invPedido in confirmarPedido.GustosEmpanadaCantidades)
+            {
+                AgregarGustoAInvitacion(new InvitacionPedidoGustoEmpanadaUsuario
+                {
+                    Cantidad = invPedido.Cantidad,
+                    IdUsuario = confirmarPedido.IdUsuario,
+                    IdGustoEmpanada = invPedido.IdGustoEmpanada,
+                    IdPedido = pedido.IdPedido
+                });
+            }
+            return true;
         }
 
         public Boolean AgregarGustoAInvitacion(InvitacionPedidoGustoEmpanadaUsuario inv)
         {
-            var ipgeu = contexto.InvitacionPedidoGustoEmpanadaUsuario;
-            Pedido pedido = contexto.Pedido.Single(p => p.IdPedido == inv.IdPedido);
+            var ipgeu = Contexto.InvitacionPedidoGustoEmpanadaUsuario;
+            Pedido pedido = Contexto.Pedido.Single(p => p.IdPedido == inv.IdPedido);
             if (!PedidoAbierto(pedido))
             {
                 return false;
@@ -123,8 +142,8 @@ namespace TresEmpanadas.Services
 
         public Boolean LimpiarGustosPedido(int idPedido)
         {
-            var ipgeu = contexto.InvitacionPedidoGustoEmpanadaUsuario;
-            Pedido pedido = contexto.Pedido.Single(p => p.IdPedido == idPedido);
+            var ipgeu = Contexto.InvitacionPedidoGustoEmpanadaUsuario;
+            Pedido pedido = Contexto.Pedido.Single(p => p.IdPedido == idPedido);
             if (!PedidoAbierto(pedido))
             {
                 return false;
@@ -135,9 +154,14 @@ namespace TresEmpanadas.Services
             return true;
         }
 
+        internal Boolean PedidoAbierto(Pedido pedido)
+        {
+            return pedido.IdEstadoPedido == 1 ? true : false;
+        }
+
         internal Boolean PedidoAbierto(int idPedido)
         {
-            var pedido = contexto.Pedido.Find(idPedido);
+            var pedido = Contexto.Pedido.Find(idPedido);
             return pedido.IdEstadoPedido == 1 ? true : false;
         }
 
@@ -166,49 +190,49 @@ namespace TresEmpanadas.Services
         internal void EliminarPedido(int idPedido)
         {
             // Trae las invitaciones que tiene un pedido
-            var listaInvitacionesPedido = contexto.InvitacionPedido.Where(inv => inv.IdPedido == idPedido).ToList();
+            var listaInvitacionesPedido = Contexto.InvitacionPedido.Where(inv => inv.IdPedido == idPedido).ToList();
             foreach (var item in listaInvitacionesPedido)
             {
-                InvitacionPedido invitacionEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedido);
+                InvitacionPedido invitacionEliminar = Contexto.InvitacionPedido.Find(item.IdInvitacionPedido);
                 if (invitacionEliminar != null)
                 {
-                    contexto.InvitacionPedido.Remove(invitacionEliminar);
-                    contexto.SaveChanges();
+                    Contexto.InvitacionPedido.Remove(invitacionEliminar);
+                    Contexto.SaveChanges();
                 }
             }
             // Trae las invitaciones con gustos de empanada por usuario
-            var listaInvitacionGustoEmpanadaPedido = contexto.InvitacionPedidoGustoEmpanadaUsuario
+            var listaInvitacionGustoEmpanadaPedido = Contexto.InvitacionPedidoGustoEmpanadaUsuario
                                                      .Where(invUsuPed => invUsuPed.IdPedido == idPedido).ToList();
             foreach (var item in listaInvitacionGustoEmpanadaPedido)
             {
-                InvitacionPedido invitacionGustoUsuarioEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
+                InvitacionPedido invitacionGustoUsuarioEliminar = Contexto.InvitacionPedido.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
                 if (invitacionGustoUsuarioEliminar != null)
                 {
-                    contexto.InvitacionPedido.Remove(invitacionGustoUsuarioEliminar);
-                    contexto.SaveChanges();
+                    Contexto.InvitacionPedido.Remove(invitacionGustoUsuarioEliminar);
+                    Contexto.SaveChanges();
                 }
             }
 
             //Traigo el pedido que voy a eliminar
-            Pedido pedidoEliminar = contexto.Pedido.Find(idPedido);
+            Pedido pedidoEliminar = Contexto.Pedido.Find(idPedido);
             // Borra todos los registros de gustos de empanadas de ese pedido
             pedidoEliminar.GustoEmpanada.Clear();
             //Borra el pedido y guarda los cambios
-            contexto.Pedido.Remove(pedidoEliminar);
-            contexto.SaveChanges();
+            Contexto.Pedido.Remove(pedidoEliminar);
+            Contexto.SaveChanges();
             //throw new NotImplementedException();
         }
 
         public int BuscarInvitacionesConfirmadas(int idPedido)
         {
-            var listaInvitacionGustoEmpanadaPedido = contexto.InvitacionPedido
+            var listaInvitacionGustoEmpanadaPedido = Contexto.InvitacionPedido
                                                     .Where(invUsuPed => invUsuPed.IdPedido == idPedido && invUsuPed.Completado == true).Count();
             return listaInvitacionGustoEmpanadaPedido;
         }
 
         public Pedido BuscarPedidoPorId(int idPedido)
         {
-            var pedidoDetalle = contexto.Pedido.Find(idPedido);
+            var pedidoDetalle = Contexto.Pedido.Find(idPedido);
             return pedidoDetalle;
         }
 

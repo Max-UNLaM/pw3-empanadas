@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.Results;
 using TresEmpanadas.Api.Models;
+using TresEmpanadas.Services;
 
 namespace TresEmpanadas.Api.Pedidos
 {
@@ -47,8 +48,29 @@ namespace TresEmpanadas.Api.Pedidos
         [HttpPost]
         public HttpResponseMessage ConfirmarPedido([FromBody]ConfirmarPedido confirmarPedido)
         {
+            var pedidoService = new PedidoService();
+            Boolean result;
+            try
+            {
+                result = pedidoService.ConfirmarPedido(confirmarPedido);
+            }
+            catch (InvalidOperationException e)
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, new RespuestaGenerica("No encontrado", e.Message));
+            }
+            catch (Exception e)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            }
+            if (result == true)
+            {
+                return Request.CreateResponse(HttpStatusCode.Created, new RespuestaGenerica("Creado", "Pedido Confirmado"));
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound, new RespuestaGenerica("No encontrado", "Pedido no encontrado"));
+            }
 
-            return Request.CreateResponse(HttpStatusCode.Created, new RespuestaGenerica("lele", "lelelele"));
         }
 
     }
