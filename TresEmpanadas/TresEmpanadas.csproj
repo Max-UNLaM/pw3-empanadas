@@ -222,6 +222,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\GustoPedido.cs" />
+    <Compile Include="Models\ViewModels\ElegirGusto.cs" />
     <Compile Include="Pedido.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -236,6 +238,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\ElegirPedidoService.cs" />
+    <Compile Include="Services\GustoService.cs" />
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\InvitacionPedidoService.cs" />
     <Compile Include="Services\PedidoService.cs" />
@@ -377,7 +381,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Pedidos\IniciarPedido.cshtml" />
-    <Content Include="Views\Pedidos\listadoPedidos.cshtml" />
+    <Content Include="Views\Pedidos\ListadoPedidos.cshtml" />
     <Content Include="Views\Pedidos\DetallePedido.cshtml" />
     <Content Include="Views\Pedidos\ClonarPedido.cshtml" />
     <Content Include="Views\Pedidos\PedidoIniciado.cshtml" />
@@ -387,6 +391,7 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Pedidos\EditarPedido.cshtml" />
     <Content Include="Views\Pedidos\EliminarPedido.cshtml" />
+    <Content Include="Views\Pedidos\ElegirGustos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,34 @@
+﻿@model TresEmpanadas.Models.ViewModels.ElegirGusto
+
+@{
+    ViewBag.Title = "Elegir";
+}
+
+<h2>Elegir</h2>
+<div class="row">
+    <ul class="list-group">
+        <li class="list-group-item">Total Empanadas: @Model.Pedido.InvitacionPedidoGustoEmpanadaUsuario.Count</li>
+        <li class="list-group-item">Precio por empanada: $@Model.Pedido.PrecioUnidad</li>
+        <li class="list-group-item">Precio por docena: $@Model.Pedido.PrecioDocena</li>
+    </ul>
+</div>
+
+<div class="row">
+    <table>
+        <tr>
+            <th>Usuario</th>
+            <th>Gusto</th>
+            <th>Cantidad</th>
+            <th>Acciones</th>
+        </tr>
+        @foreach (var gusto in Model.GustosPedidos)
+        {
+            <tr>
+                <td>@gusto.NombreUsuario</td>
+                <td>@gusto.NombreGustoEmpanada</td>
+                <td>@gusto.Cantidad</td>
+                <td>LELE</td>
+            </tr>
+        }
+    </table>
+</div>
