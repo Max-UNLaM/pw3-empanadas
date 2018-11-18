@@ -33,11 +33,11 @@ namespace TresEmpanadas.Services
                 GustoEmpanada gustoEmpanada = Contexto.GustoEmpanada.Find(item);
                 pedido.GustoEmpanada.Add(gustoEmpanada);
             }
-            Contexto.Pedido.Add(pedido);
-            Contexto.SaveChanges();
-            foreach (var item in usuariosInvitados)
+            contexto.Pedido.Add(pedido);
+            contexto.SaveChanges();
+            foreach (var item in usuariosInvitados) 
             {
-                var invitacion = new InvitacionPedido();
+                InvitacionPedido invitacion = new InvitacionPedido();
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
                 invitacion.IdUsuario = (int)item;
@@ -164,7 +164,7 @@ namespace TresEmpanadas.Services
             var pedido = Contexto.Pedido.Find(idPedido);
             return pedido.IdEstadoPedido == 1 ? true : false;
         }
-
+          
         public Pedido EditarPedido(int idPedido)
         {
             throw new NotImplementedException();
