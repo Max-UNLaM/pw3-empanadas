@@ -33,8 +33,8 @@ namespace TresEmpanadas.Services
                 GustoEmpanada gustoEmpanada = Contexto.GustoEmpanada.Find(item);
                 pedido.GustoEmpanada.Add(gustoEmpanada);
             }
-            contexto.Pedido.Add(pedido);
-            contexto.SaveChanges();
+            Contexto.Pedido.Add(pedido);
+            Contexto.SaveChanges();
             foreach (var item in usuariosInvitados) 
             {
                 InvitacionPedido invitacion = new InvitacionPedido();
