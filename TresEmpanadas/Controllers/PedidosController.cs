@@ -15,20 +15,27 @@ namespace TresEmpanadas.Controllers
         // Iniciar Pedido
         public ActionResult IniciarPedido(int? idPedido)
         {
-            System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
-            ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-            ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
-            if (idPedido == null)
+            if (Session["idUsuario"] != null)
             {
-                ViewBag.conModelo = false;
-                return View();
+                        //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                    ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    if (idPedido == null)
+                    {
+                        ViewBag.conModelo = false;
+                        return View();
+                    }
+                    else
+                    {
+                        ViewBag.conModelo = true;
+                        int idParametro = (int)idPedido;
+                        Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
+                        return View(pedidoBuscado);
+                    }
             }
             else
             {
-                ViewBag.conModelo = true;
-                int idParametro = (int)idPedido;
-                Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
-                return View(pedidoBuscado);
+                return Redirect("/Home/Login?redirigir=/Pedidos/IniciarPedido/");
             }
         }
 
