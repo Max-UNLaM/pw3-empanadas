@@ -154,6 +154,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entitie.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entitie.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entitie.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entitie.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entitie.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Entitie.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EstadoPedido.cs">
+      <DependentUpon>Entitie.tt</DependentUpon>
+    </Compile>
+    <Compile Include="GustoEmpanada.cs">
+      <DependentUpon>Entitie.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InvitacionPedido.cs">
+      <DependentUpon>Entitie.tt</DependentUpon>
+    </Compile>
+    <Compile Include="InvitacionPedidoGustoEmpanadaUsuario.cs">
+      <DependentUpon>Entitie.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Dto\ConfirmarPedido.cs" />
     <Compile Include="Models\Dto\GustosEmpanadaCantidad.cs" />
     <Compile Include="Api\Models\RespuestaGenerica.cs" />
@@ -192,38 +219,11 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PedidosController.cs" />
-    <Compile Include="EstadoPedido.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="GustoEmpanada.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InvitacionPedido.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InvitacionPedidoGustoEmpanadaUsuario.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model1.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Pedido.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Entitie.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -241,7 +241,7 @@
     <Compile Include="Services\PedidoService.cs" />
     <Compile Include="Services\UsuarioService.cs" />
     <Compile Include="Usuario.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
+      <DependentUpon>Entitie.tt</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -255,21 +255,21 @@
     <Content Include="Content\Images\sliders\800_400empa1.jpg" />
     <Content Include="Content\Images\sliders\800_400empa2.jpg" />
     <Content Include="Content\Images\sliders\800_400empa3.jpg" />
+    <Content Include="Entitie.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Entitie.edmx</DependentUpon>
+      <LastGenOutput>Entitie.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Entitie.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Entitie.edmx</DependentUpon>
+      <LastGenOutput>Entitie.cs</LastGenOutput>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Model1.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Model1.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Model1.edmx</DependentUpon>
-      <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -285,6 +285,8 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Scripts\css\select2.css" />
+    <Content Include="Scripts\css\select2.min.css" />
     <Content Include="Scripts\esm\popper-utils.js" />
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
@@ -293,13 +295,6 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
-    <EntityDeploy Include="Model1.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Model1.edmx.diagram">
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Content>
     <Content Include="..\.gitignore">
       <Link>.gitignore</Link>
     </Content>
@@ -326,8 +321,16 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <None Include="Connection.config" />
-    <None Include="Connection.config.example" />
+    <None Include="Connection.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Entitie.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Entitie.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Entitie.edmx.diagram">
+      <DependentUpon>Entitie.edmx</DependentUpon>
+    </Content>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -343,6 +346,65 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\js\i18n\af.js" />
+    <Content Include="Scripts\js\i18n\ar.js" />
+    <Content Include="Scripts\js\i18n\az.js" />
+    <Content Include="Scripts\js\i18n\bg.js" />
+    <Content Include="Scripts\js\i18n\bs.js" />
+    <Content Include="Scripts\js\i18n\ca.js" />
+    <Content Include="Scripts\js\i18n\cs.js" />
+    <Content Include="Scripts\js\i18n\da.js" />
+    <Content Include="Scripts\js\i18n\de.js" />
+    <Content Include="Scripts\js\i18n\dsb.js" />
+    <Content Include="Scripts\js\i18n\el.js" />
+    <Content Include="Scripts\js\i18n\en.js" />
+    <Content Include="Scripts\js\i18n\es.js" />
+    <Content Include="Scripts\js\i18n\et.js" />
+    <Content Include="Scripts\js\i18n\eu.js" />
+    <Content Include="Scripts\js\i18n\fa.js" />
+    <Content Include="Scripts\js\i18n\fi.js" />
+    <Content Include="Scripts\js\i18n\fr.js" />
+    <Content Include="Scripts\js\i18n\gl.js" />
+    <Content Include="Scripts\js\i18n\he.js" />
+    <Content Include="Scripts\js\i18n\hi.js" />
+    <Content Include="Scripts\js\i18n\hr.js" />
+    <Content Include="Scripts\js\i18n\hsb.js" />
+    <Content Include="Scripts\js\i18n\hu.js" />
+    <Content Include="Scripts\js\i18n\hy.js" />
+    <Content Include="Scripts\js\i18n\id.js" />
+    <Content Include="Scripts\js\i18n\is.js" />
+    <Content Include="Scripts\js\i18n\it.js" />
+    <Content Include="Scripts\js\i18n\ja.js" />
+    <Content Include="Scripts\js\i18n\km.js" />
+    <Content Include="Scripts\js\i18n\ko.js" />
+    <Content Include="Scripts\js\i18n\lt.js" />
+    <Content Include="Scripts\js\i18n\lv.js" />
+    <Content Include="Scripts\js\i18n\mk.js" />
+    <Content Include="Scripts\js\i18n\ms.js" />
+    <Content Include="Scripts\js\i18n\nb.js" />
+    <Content Include="Scripts\js\i18n\nl.js" />
+    <Content Include="Scripts\js\i18n\pl.js" />
+    <Content Include="Scripts\js\i18n\ps.js" />
+    <Content Include="Scripts\js\i18n\pt-BR.js" />
+    <Content Include="Scripts\js\i18n\pt.js" />
+    <Content Include="Scripts\js\i18n\ro.js" />
+    <Content Include="Scripts\js\i18n\ru.js" />
+    <Content Include="Scripts\js\i18n\sk.js" />
+    <Content Include="Scripts\js\i18n\sl.js" />
+    <Content Include="Scripts\js\i18n\sr-Cyrl.js" />
+    <Content Include="Scripts\js\i18n\sr.js" />
+    <Content Include="Scripts\js\i18n\sv.js" />
+    <Content Include="Scripts\js\i18n\th.js" />
+    <Content Include="Scripts\js\i18n\tk.js" />
+    <Content Include="Scripts\js\i18n\tr.js" />
+    <Content Include="Scripts\js\i18n\uk.js" />
+    <Content Include="Scripts\js\i18n\vi.js" />
+    <Content Include="Scripts\js\i18n\zh-CN.js" />
+    <Content Include="Scripts\js\i18n\zh-TW.js" />
+    <Content Include="Scripts\js\select2.full.js" />
+    <Content Include="Scripts\js\select2.full.min.js" />
+    <Content Include="Scripts\js\select2.js" />
+    <Content Include="Scripts\js\select2.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
