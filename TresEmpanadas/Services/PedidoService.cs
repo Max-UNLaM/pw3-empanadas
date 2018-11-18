@@ -10,28 +10,33 @@ namespace TresEmpanadas.Services
     public class PedidoService
     {
         Entities contexto = new Entities();
-                                     //Listado de Estado de los pedidos
-        public List<EstadoPedido> ListarEstadosPedidos() {
+        //Listado de Estado de los pedidos
+        public List<EstadoPedido> ListarEstadosPedidos()
+        {
             var estados = contexto.EstadoPedido.ToList();
             return estados;
         }
-                                          //Listado de gustos de empanadas
-        public List<GustoEmpanada> ListarGustosEmpanadas() {
+        //Listado de gustos de empanadas
+        public List<GustoEmpanada> ListarGustosEmpanadas()
+        {
             var gustosEmpanadas = contexto.GustoEmpanada.ToList();
             return gustosEmpanadas;
         }
-                                                // Guardar Pedido
-        public void GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados) {
+        // Guardar Pedido
+        public void GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados)
+        {
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
             pedido.IdEstadoPedido = 1;
-            foreach (var item in gustos) {
+            foreach (var item in gustos)
+            {
                 GustoEmpanada gustoEmpanada = contexto.GustoEmpanada.Find(item);
-                pedido.GustoEmpanada.Add(gustoEmpanada);       
+                pedido.GustoEmpanada.Add(gustoEmpanada);
             }
             contexto.Pedido.Add(pedido);
             contexto.SaveChanges();
-            foreach (var item in usuariosInvitados) {
+            foreach (var item in usuariosInvitados)
+            {
                 InvitacionPedidoService invitacion = new InvitacionPedidoService();
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
@@ -41,12 +46,13 @@ namespace TresEmpanadas.Services
                 contexto.InvitacionPedido.Add(invitacion);
                 contexto.SaveChanges();
             }
-            
+
             int idGenerado = pedido.IdPedido;
         }
 
-                         // Listado de pedidos que estan asociados a un usuario
-        public List<Pedido> ListadoPedidosAsociadosUsuario() {
+        // Listado de pedidos que estan asociados a un usuario
+        public List<Pedido> ListadoPedidosAsociadosUsuario()
+        {
             //Ejemplo Linq Join 
             //var pedidoUsuario = contexto.Pedido.Join
             //                    (contexto.InvitacionPedido, pedido => pedido.IdPedido,
@@ -58,7 +64,7 @@ namespace TresEmpanadas.Services
             List<Pedido> pedidosResultado = new List<Pedido>();
 
             //PEDIDOS DONDE ES RESPONSABLE
-            int idUsuarioLogueado = (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"])) ;
+            int idUsuarioLogueado = (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]));
             var pedidosResponsable = contexto.Pedido
               .Where(pedido => pedido.IdUsuarioResponsable == idUsuarioLogueado)
               .OrderByDescending(pedido => pedido.FechaCreacion)
@@ -74,17 +80,20 @@ namespace TresEmpanadas.Services
             foreach (var inv in invitacionesUsuario)
             {
                 Boolean agregarPedido = true;
-                foreach (var pedResponsable in pedidosResponsable) {
-                    if (inv.IdPedido == pedResponsable.IdPedido) {
-                         agregarPedido = false; 
+                foreach (var pedResponsable in pedidosResponsable)
+                {
+                    if (inv.IdPedido == pedResponsable.IdPedido)
+                    {
+                        agregarPedido = false;
                     }
                 }
-                if (agregarPedido) {
+                if (agregarPedido)
+                {
                     pedidosResultado.Add(inv.Pedido);
                 }
-                
+
             }
-                            ////Si quiero ordenar la lista completa
+            ////Si quiero ordenar la lista completa
 
             //List<Pedido> listaordenada = new List<Pedido>();
             //var listaOrdenada = from o in pedidosResultado
@@ -97,7 +106,7 @@ namespace TresEmpanadas.Services
 
         public Boolean ConfirmarPedido(ConfirmarPedido confirmarPedido)
         {
-            LimpiarGustosPedido(confirmarPedido.)
+            LimpiarGustosPedido(confirmarPedido);
         }
 
         public Boolean AgregarGustoAInvitacion(InvitacionPedidoGustoEmpanadaUsuario inv)
@@ -132,10 +141,6 @@ namespace TresEmpanadas.Services
             return pedido.IdEstadoPedido == 1 ? true : false;
         }
 
-        internal Boolean PedidoAbierto(Pedido pedido)
-        {
-            return pedido.IdEstadoPedido == 1 ? true : false;
-
         public Pedido EditarPedido(int idPedido)
         {
             throw new NotImplementedException();
@@ -150,10 +155,11 @@ namespace TresEmpanadas.Services
             {
                 estado = true;
             }
-            else{
+            else
+            {
                 estado = false;
             }
-            
+
             return estado;
         }
 
@@ -161,7 +167,8 @@ namespace TresEmpanadas.Services
         {
             // Trae las invitaciones que tiene un pedido
             var listaInvitacionesPedido = contexto.InvitacionPedido.Where(inv => inv.IdPedido == idPedido).ToList();
-            foreach (var item in listaInvitacionesPedido) {
+            foreach (var item in listaInvitacionesPedido)
+            {
                 InvitacionPedido invitacionEliminar = contexto.InvitacionPedido.Find(item.IdInvitacionPedido);
                 if (invitacionEliminar != null)
                 {
@@ -181,7 +188,7 @@ namespace TresEmpanadas.Services
                     contexto.SaveChanges();
                 }
             }
-           
+
             //Traigo el pedido que voy a eliminar
             Pedido pedidoEliminar = contexto.Pedido.Find(idPedido);
             // Borra todos los registros de gustos de empanadas de ese pedido
@@ -192,13 +199,15 @@ namespace TresEmpanadas.Services
             //throw new NotImplementedException();
         }
 
-        public int BuscarInvitacionesConfirmadas(int idPedido) {
+        public int BuscarInvitacionesConfirmadas(int idPedido)
+        {
             var listaInvitacionGustoEmpanadaPedido = contexto.InvitacionPedido
                                                     .Where(invUsuPed => invUsuPed.IdPedido == idPedido && invUsuPed.Completado == true).Count();
             return listaInvitacionGustoEmpanadaPedido;
         }
 
-        public Pedido BuscarPedidoPorId(int idPedido) {
+        public Pedido BuscarPedidoPorId(int idPedido)
+        {
             var pedidoDetalle = contexto.Pedido.Find(idPedido);
             return pedidoDetalle;
         }
