@@ -32,7 +32,7 @@ namespace TresEmpanadas.Services
             contexto.Pedido.Add(pedido);
             contexto.SaveChanges();
             foreach (var item in usuariosInvitados) {
-                InvitacionPedidoService invitacion = new InvitacionPedidoService();
+                InvitacionPedido invitacion = new InvitacionPedido();
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
                 invitacion.IdUsuario = (int)item;
@@ -130,7 +130,7 @@ namespace TresEmpanadas.Services
         internal Boolean PedidoAbierto(Pedido pedido)
         {
             return pedido.IdEstadoPedido == 1 ? true : false;
-
+        }
         public Pedido EditarPedido(int idPedido)
         {
             throw new NotImplementedException();

@@ -39,9 +39,12 @@ namespace TresEmpanadas.Controllers
         }
 
         //Listado Pedidos
-        public ActionResult ListadoPedidos() {
+        public ActionResult ListadoPedidos() {  
             if(Session["idUsuario"] != null)
             {
+                ViewBag.pedidoEliminado = Session["pedidoEliminado"];
+                //Session["pedidoEliminado"] = null;
+                Session.Remove("pedidoEliminado");
                 var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
                 ViewBag.pedidosUsuario = listadoPedidos;
                 return View();
@@ -76,7 +79,9 @@ namespace TresEmpanadas.Controllers
 
         //Eliminar Pedidos
         public RedirectToRouteResult Eliminar(int idPedido) {
-           servicioPedido.EliminarPedido(idPedido);
+            var nombrePedidoEliminado = servicioPedido.BuscarPedidoPorId(idPedido);
+            servicioPedido.EliminarPedido(idPedido);
+            Session["pedidoEliminado"] = nombrePedidoEliminado.NombreNegocio;
             return RedirectToAction("ListadoPedidos");
         }
         public ActionResult EliminarPedido(int idPedido) {
