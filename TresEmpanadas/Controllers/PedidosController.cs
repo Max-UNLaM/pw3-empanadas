@@ -40,10 +40,10 @@ namespace TresEmpanadas.Controllers
 
         //Listado Pedidos
         public ActionResult ListadoPedidos() {
-            var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
             ViewBag.pedidoEliminado = Session["pedidoEliminado"];
             //Session["pedidoEliminado"] = null;
             Session.Remove("pedidoEliminado");
+            var listadoPedidos = servicioPedido.ListadoPedidosAsociadosUsuario();
             ViewBag.pedidosUsuario = listadoPedidos;
             return View();
         }
