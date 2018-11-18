@@ -137,6 +137,7 @@ namespace TresEmpanadas.Services
                 return false;
             }
             ipgeu.Add(inv);
+            Contexto.SaveChanges();
             return true;
         }
 
@@ -151,6 +152,7 @@ namespace TresEmpanadas.Services
             List<InvitacionPedidoGustoEmpanadaUsuario> actual = ipgeu.Where(
                 invi => invi.IdPedido == pedido.IdPedido).ToList();
             actual.ForEach(invi => ipgeu.Remove(invi));
+            Contexto.SaveChanges();
             return true;
         }
 
