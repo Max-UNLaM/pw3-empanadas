@@ -262,4 +262,5 @@ __pycache__/
 
 
 # Configuración base de datos
-Connection.config
+/Connection.config
+/TresEmpanadas/Connection.config
