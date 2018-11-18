@@ -135,6 +135,26 @@ namespace TresEmpanadas.Services
         internal Boolean PedidoAbierto(Pedido pedido)
         {
             return pedido.IdEstadoPedido == 1 ? true : false;
+
+        public Pedido EditarPedido(int idPedido)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool EstadoPedido(int idPedido)
+        {
+            bool estado;
+            Pedido pedidoBuscado = BuscarPedidoPorId(idPedido);
+            String nombreEstado = pedidoBuscado.EstadoPedido.Nombre;
+            if (nombreEstado.Equals("Abierto"))
+            {
+                estado = true;
+            }
+            else{
+                estado = false;
+            }
+            
+            return estado;
         }
 
         internal void EliminarPedido(int idPedido)

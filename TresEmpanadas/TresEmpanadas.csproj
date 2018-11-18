@@ -291,9 +291,12 @@
     </Content>
     <Content Include="..\.gitignore">
       <Link>.gitignore</Link>
-	</Content>
+	 </Content>
     <Content Include="Connection.config">
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="..\.gitignore">
+      <Link>.gitignore</Link>
     </Content>
     <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
