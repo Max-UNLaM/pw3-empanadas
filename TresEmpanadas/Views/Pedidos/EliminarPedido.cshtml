@@ -1,0 +1,19 @@
+﻿@model TresEmpanadas.Pedido
+
+<h3>¿Está seguro que desea eliminar el pedido  @Html.DisplayFor(model => model.NombreNegocio) ?</h3>
+<h4>Actualmente posee @ViewBag.cantidadInvitaciones invitaciones confirmadas</h4>
+<div>
+    <hr />
+   @using (Html.BeginForm("Eliminar","Pedidos", Model.IdPedido , FormMethod.Get))
+   {
+       @Html.HiddenFor(model => model.IdPedido)
+       <div class="form-actions no-color">
+            <p><input type="submit" class="btn btn-primary btn-lg" value="Eliminar Pedido"/></p>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <p><a href="~/Pedidos/ListadoPedidos" class="btn btn-danger">Cancelar</a></p>
+            </div>
+        </div>
+   }
+</div>
