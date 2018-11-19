@@ -17,14 +17,16 @@ namespace TresEmpanadas.Services
             var estados = Contexto.EstadoPedido.ToList();
             return estados;
         }
+
         //Listado de gustos de empanadas
         public List<GustoEmpanada> ListarGustosEmpanadas()
         {
             var gustosEmpanadas = Contexto.GustoEmpanada.ToList();
             return gustosEmpanadas;
         }
+
         // Guardar Pedido
-        public void GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        public int GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
         {
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
@@ -67,6 +69,7 @@ namespace TresEmpanadas.Services
             }
 
             int idGenerado = pedido.IdPedido;
+            return idGenerado;
         }
 
         // Listado de pedidos que estan asociados a un usuario

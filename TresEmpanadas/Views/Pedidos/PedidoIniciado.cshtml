@@ -1,1 +1,7 @@
 ﻿@model TresEmpanadas.Pedido
+@{
+    ViewBag.Title = "Pedido Iniciado";
+}
+<h4>El Pedido @ViewBag.NombrePedido se Inicio  </h4>
+
+@Html.ActionLink("Editar Pedido", "EditarPedido" , new { idPedido = ViewBag.IdPedido })
