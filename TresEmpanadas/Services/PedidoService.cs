@@ -64,7 +64,7 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
-                this.enviarEmail(invitacion);
+                this.enviarEmail(invitacion, usu); 
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
@@ -72,16 +72,14 @@ namespace TresEmpanadas.Services
             int idGenerado = pedido.IdPedido;
         }
 
-        public void enviarEmail(InvitacionPedido inv)
+        public void enviarEmail(InvitacionPedido inv, Usuario usu)
         {
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
-            var EmailInvitado = Contexto.Usuario.Where(u => u.IdUsuario == inv.IdUsuario).Select(u => u.Email).Single();
-            //var responsable = Contexto.InvitacionPedido.Where(u => u.IdUsuario == valor).Select(u => u.Email).Single();
 
             using (MailMessage mail = new MailMessage())
             {
                 mail.From = new MailAddress("TresEmpanadas@gmail.com");
-                mail.To.Add(EmailInvitado);
+                mail.To.Add(usu.Email);
                 mail.Subject = "Email de prueba";
                 var link = HttpContext.Current.Request.Url.Host+":"+HttpContext.Current.Request.Url.Port+"/Pedidos/elegir/" + inv.Token;
                 mail.Body = "<a href=" + link + ">" +link+"</a>";
