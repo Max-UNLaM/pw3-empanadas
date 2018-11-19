@@ -13,13 +13,19 @@ namespace TresEmpanadas.Services
         public ElegirGusto BuildElegirPedido(int idPedido)
         {
             var pedidoService = new PedidoService();
-            Pedido pedido = pedidoService.BuscarPedidoPorId(idPedido);
             var gustoService = new GustoService();
+            var invitacionPedidoService = new InvitacionPedidoService();
+            Pedido pedido = pedidoService.BuscarPedidoPorId(idPedido);
             var gustosDelPedido = gustoService.GustosPedidos(pedido);
+            int cantidadEmpa = pedidoService.CantidadEmpanadas(pedido.IdPedido);
+            int precioTotal = cantidadEmpa * pedido.PrecioUnidad;
             return new ElegirGusto {
                 GustoEmpanadas = Entities.GustoEmpanada.ToList(),
                 GustosPedidos = gustoService.GustosPedidos(pedido),
-                Pedido = pedido
+                Pedido = pedido,
+                CantidadEmpanadas = cantidadEmpa,
+                PrecioTotal = precioTotal,
+                Token = invitacionPedidoService.GetInvitacionPedido(1, pedido.IdPedido).Token
             };
         }
     }

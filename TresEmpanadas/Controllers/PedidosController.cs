@@ -150,7 +150,14 @@ namespace TresEmpanadas.Controllers
                 return RedirectToAction("ListadoPedidos");
             }
             var elegirPedidoService = new ElegirPedidoService();
-            return View(elegirPedidoService.BuildElegirPedido(idPedido));
+            try
+            {
+                return View(elegirPedidoService.BuildElegirPedido(idPedido));
+            }
+            catch
+            {
+                return RedirectToAction("ListadoPedidos");
+            }
         }
     }
 }

@@ -8,6 +8,16 @@ namespace TresEmpanadas.Services
 {
     public class InvitacionPedidoService
     {
+        Entities Entities = new Entities();
+
+        public InvitacionPedido GetInvitacionPedido(int idUsuario, int idPedido)
+        {
+            return Entities.InvitacionPedido.Single(
+                (inv) =>
+                    inv.IdPedido == idPedido && inv.IdUsuario == idUsuario
+                );
+        }
+
         internal void AddGustoEmpanada()
         {
 

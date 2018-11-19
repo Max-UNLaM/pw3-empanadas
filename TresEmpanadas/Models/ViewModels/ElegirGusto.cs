@@ -10,5 +10,9 @@ namespace TresEmpanadas.Models.ViewModels
         public List<GustoEmpanada> GustoEmpanadas { get; set; }
         public List<GustoPedido> GustosPedidos { get; set; }
         public Pedido Pedido { get; set; }
+        public InvitacionPedido InvitacionPedido { get; set; }
+        public int CantidadEmpanadas { get; set; }
+        public float PrecioTotal { get; set; }
+        public Guid Token { get; set; }
     }
 }

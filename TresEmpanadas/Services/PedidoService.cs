@@ -230,5 +230,12 @@ namespace TresEmpanadas.Services
             return pedidoDetalle;
         }
 
+        public int CantidadEmpanadas(int id)
+        {
+            var pedidos = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(
+                inv => inv.IdPedido == id);
+            return pedidos.Sum(p => p.Cantidad);
+        }
+
     }
 }
