@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TresEmpanadas.Api.Models;
@@ -64,9 +66,14 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
+                this.enviarEmail(invitacion, usu, null); 
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
+
+            var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).Single();
+            this.enviarEmail(null, null, responsable);
+
             int idGenerado = pedido.IdPedido;
             return idGenerado;
         }
@@ -133,6 +140,35 @@ namespace TresEmpanadas.Services
                 }
             }
 
+        }
+
+        public void enviarEmail(InvitacionPedido inv, Usuario usu, Guid? responsable)
+        {
+            MailMessage mail = new MailMessage();    
+            mail.From = new MailAddress("TresEmpanadas@gmail.com");
+            
+            if(responsable != null)
+                mail.To.Add((string)HttpContext.Current.Session["email"]);
+            else
+                mail.To.Add(usu.Email);
+            
+
+            mail.Subject = "Pedido en TresEmpanadas";
+            var link = "";
+
+            if(responsable != null)
+                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + responsable;
+            else
+                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + inv.Token;
+
+            mail.Body = "<a href=" + link + ">" +link+"</a>";
+            mail.IsBodyHtml = true;
+
+            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
+            smtp.Credentials = new NetworkCredential("tresempanadaspw3@gmail.com", "pruebapw3");
+            smtp.EnableSsl = true;
+            smtp.Send(mail);    
+            
         }
 
         // Listado de pedidos que estan asociados a un usuario
