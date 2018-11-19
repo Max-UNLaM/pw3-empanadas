@@ -120,16 +120,6 @@
         <div class="col-md-6">
             <div class="form-group">
                 @Html.Label("Invitados", htmlAttributes: new { @class = "control-label col-md-2" })
-                            @*<div class="col-md-12">
-                       <select name="usuariosInvitados[]" multiple="multiple" class="form-control">
-                           <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                           @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
-                           {
-                               <option value="@Items.Value" spellcheck="true">@Items.Text</option>
-                           }
-                       </select>
-                        <br />
-                    </div>*@
                 <br />
                 <div class="col-6">
                     <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]" required="required">

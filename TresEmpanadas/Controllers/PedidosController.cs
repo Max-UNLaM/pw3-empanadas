@@ -153,7 +153,8 @@ namespace TresEmpanadas.Controllers
             Boolean estadoPedido = servicioPedido.EstadoPedido(idPedido);
             if (estadoPedido)
             {
-                System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                
+                ViewBag.opciones = servicioPedido.CargarOpciones();
                 ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
                 ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
                 ViewBag.conModelo = true;
@@ -169,6 +170,12 @@ namespace TresEmpanadas.Controllers
                 TempData["idPedido"] = idPedido;
                 return RedirectToAction("DetallePedido");
             }
+        }
+        [HttpPost]
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados) {
+
+            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados);
+            return RedirectToAction("ListadoPedidos");   
         }
 
         public ActionResult ElegirGustos()
