@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TresEmpanadas.Api.Models;
@@ -62,11 +64,36 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
+                this.enviarEmail(invitacion);
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
 
             int idGenerado = pedido.IdPedido;
+        }
+
+        public void enviarEmail(InvitacionPedido inv)
+        {
+            var valor = HttpContext.Current.Session["IdUsuario"] as int?;
+            var EmailInvitado = Contexto.Usuario.Where(u => u.IdUsuario == inv.IdUsuario).Select(u => u.Email).Single();
+            //var responsable = Contexto.InvitacionPedido.Where(u => u.IdUsuario == valor).Select(u => u.Email).Single();
+
+            using (MailMessage mail = new MailMessage())
+            {
+                mail.From = new MailAddress("TresEmpanadas@gmail.com");
+                mail.To.Add(EmailInvitado);
+                mail.Subject = "Email de prueba";
+                var link = HttpContext.Current.Request.Url.Host+":"+HttpContext.Current.Request.Url.Port+"/Pedidos/elegir/" + inv.Token;
+                mail.Body = "<a href=" + link + ">" +link+"</a>";
+                mail.IsBodyHtml = true;
+
+                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.Credentials = new NetworkCredential("tresempanadaspw3@gmail.com", "pruebapw3");
+                    smtp.EnableSsl = true;
+                    smtp.Send(mail);
+                }
+            }
         }
 
         // Listado de pedidos que estan asociados a un usuario
