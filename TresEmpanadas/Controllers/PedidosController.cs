@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TresEmpanadas.Models.ViewModels;
 using TresEmpanadas.Services;
 namespace TresEmpanadas.Controllers
 {
@@ -119,7 +120,7 @@ namespace TresEmpanadas.Controllers
 
         //Eliminar Pedidos
 
-        public RedirectToRouteResult Eliminar(int idPedido) 
+        public RedirectToRouteResult Eliminar(int idPedido)
         {
             var nombrePedidoEliminado = servicioPedido.BuscarPedidoPorId(idPedido);
             servicioPedido.EliminarPedido(idPedido);
@@ -167,6 +168,29 @@ namespace TresEmpanadas.Controllers
                 //return View("",detallePedido);
                 TempData["idPedido"] = idPedido;
                 return RedirectToAction("DetallePedido");
+            }
+        }
+
+        public ActionResult ElegirGustos()
+        {
+            int idPedido;
+            try
+            {
+
+                idPedido = Int32.Parse(Request.QueryString["IdPedido"]);
+            }
+            catch
+            {
+                return RedirectToAction("ListadoPedidos");
+            }
+            var elegirPedidoService = new ElegirPedidoService();
+            try
+            {
+                return View(elegirPedidoService.BuildElegirPedido(idPedido));
+            }
+            catch
+            {
+                return RedirectToAction("ListadoPedidos");
             }
         }
     }

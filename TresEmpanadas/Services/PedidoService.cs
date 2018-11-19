@@ -67,7 +67,6 @@ namespace TresEmpanadas.Services
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
-
             int idGenerado = pedido.IdPedido;
             return idGenerado;
         }
@@ -81,24 +80,18 @@ namespace TresEmpanadas.Services
             //                      invitacion => invitacion.IdPedido, (pedido, invitacion) => new { pedido })
             //                     .OrderByDescending(pedido => pedido.pedido.FechaCreacion)
             //                     .Where(ped => ped.pedido.IdUsuarioResponsable  == 1).ToList();
-
-
             List<Pedido> pedidosResultado = new List<Pedido>();
-
             //PEDIDOS DONDE ES RESPONSABLE
             int idUsuarioLogueado = (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]));
             var pedidosResponsable = Contexto.Pedido
               .Where(pedido => pedido.IdUsuarioResponsable == idUsuarioLogueado)
               .OrderByDescending(pedido => pedido.FechaCreacion)
               .ToList();
-
             //inserto en mi lista resultado
             pedidosResultado.AddRange(pedidosResponsable);
-
             //PEDIDOS DONDE ES INVITADO
             var invitacionesUsuario = Contexto.InvitacionPedido
             .Where(inv => inv.IdUsuario == idUsuarioLogueado).ToList();
-
             foreach (var inv in invitacionesUsuario)
             {
                 Boolean agregarPedido = true;
@@ -122,7 +115,6 @@ namespace TresEmpanadas.Services
             //                    orderby o.FechaCreacion descending
             //                    select o;
             //pedidosResultado = listaOrdenada.ToList<Pedido>();
-
             return pedidosResultado;
         }
 
@@ -188,7 +180,7 @@ namespace TresEmpanadas.Services
             var pedido = Contexto.Pedido.Find(idPedido);
             return pedido.IdEstadoPedido == 1 ? true : false;
         }
-          
+
         public Pedido EditarPedido(int idPedido)
         {
             throw new NotImplementedException();
@@ -258,6 +250,13 @@ namespace TresEmpanadas.Services
         {
             var pedidoDetalle = Contexto.Pedido.Find(idPedido);
             return pedidoDetalle;
+        }
+
+        public int CantidadEmpanadas(int id)
+        {
+            var pedidos = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(
+                inv => inv.IdPedido == id);
+            return pedidos.Sum(p => p.Cantidad);
         }
 
     }

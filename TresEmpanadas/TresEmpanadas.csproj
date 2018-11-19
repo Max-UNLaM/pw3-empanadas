@@ -222,6 +222,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\GustoPedido.cs" />
+    <Compile Include="Models\ViewModels\ElegirGusto.cs" />
     <Compile Include="Pedido.cs">
       <DependentUpon>Entitie.tt</DependentUpon>
     </Compile>
@@ -236,6 +238,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Services\ElegirPedidoService.cs" />
+    <Compile Include="Services\GustoService.cs" />
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\InvitacionPedidoService.cs" />
     <Compile Include="Services\PedidoService.cs" />
@@ -406,6 +410,7 @@
     <Content Include="Scripts\js\select2.js" />
     <Content Include="Scripts\js\select2.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\Pedidos\editar-pedido.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -439,7 +444,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Pedidos\IniciarPedido.cshtml" />
-    <Content Include="Views\Pedidos\listadoPedidos.cshtml" />
+    <Content Include="Views\Pedidos\ListadoPedidos.cshtml" />
     <Content Include="Views\Pedidos\DetallePedido.cshtml" />
     <Content Include="Views\Pedidos\ClonarPedido.cshtml" />
     <Content Include="Views\Pedidos\PedidoIniciado.cshtml" />
@@ -449,6 +454,7 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Pedidos\EditarPedido.cshtml" />
     <Content Include="Views\Pedidos\EliminarPedido.cshtml" />
+    <Content Include="Views\Pedidos\ElegirGustos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -483,6 +489,13 @@
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+    <ItemGroup>
+      <RoslynFiles Include="$(CscToolPath)\*" />
+    </ItemGroup>
+    <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
+    <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
+</Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
