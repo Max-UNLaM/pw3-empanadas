@@ -70,27 +70,52 @@ namespace TresEmpanadas.Controllers
         //Detalle Pedidos
         public ActionResult DetallePedido(int? idPedido)
         {
-            Pedido detallePedido;
-            if (idPedido != null)
+            if (Session["idUsuario"] != null)
             {
-                detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
-            }
-            else
-            {
-                int idRecibido = (int)TempData["idPedido"];
-                if (idRecibido > 0)
+                Pedido detallePedido;
+                if (idPedido != null)
                 {
-                    detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
+                    detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
                 }
                 else
                 {
-                    return View();
+                    int idRecibido = (int)TempData["idPedido"];
+                    if (idRecibido > 0)
+                    {
+                        detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
+                    }
+                    else
+                    {
+                        return View();
+                    }
                 }
+                ViewBag.detallePedido = detallePedido;
+                return View(detallePedido);
             }
-            ViewBag.detallePedido = detallePedido;
-            return View(detallePedido);
+            else
+            {
+                string url;
+                if (idPedido != null)
+                {
+                       url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido="+idPedido;
+                   
+                }
+                else
+                {
+                    int idRecibido = (int)TempData["idPedido"];
+                    if (idRecibido > 0)
+                    {
+                        url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido=" +idRecibido;
+                    }
+                    else
+                    {
+                        return Redirect("/Home/Login?redirigir=/Pedidos/DetallePedido/");
+                    }
+                }
+                return Redirect(url);
+            }
 
-        }
+            }
 
         //Eliminar Pedidos
 
