@@ -33,7 +33,7 @@ function enviarGustos() {
     let filas = Array.from(editarPedidoElements.tablaAltaGustos.rows);
     let validRows = [];
     let modificarPedido = {
-        GustosPedidos: [],
+        GustosEmpanadaCantidades: [],
         IdUsuario: 1,
         TokenInvitacion: editarPedidoElements.token
     }
@@ -43,7 +43,7 @@ function enviarGustos() {
         }
     });
     for (let row of validRows) {
-        modificarPedido.GustosPedidos.push({
+        modificarPedido.GustosEmpanadaCantidades.push({
             IdGustoEmpanada: document.getElementById(row).childNodes[0].childNodes[0].value,
             Cantidad: document.getElementById(row).childNodes[1].childNodes[0].value
         })
@@ -57,12 +57,21 @@ function sendGustosToApi(modificarPedido) {
     sender.open("POST", '/api/Pedidos/ConfirmarPedido');
     sender.setRequestHeader("Content-Type", "application/json");
     sender.onreadystatechange = function () {
-        if (this.readyState === XMLHttpRequest.DONE && this.status === 201) {
-            console.log(this);
-        } else {
-            console.log(this);
+        if (this.readyState === XMLHttpRequest.DONE) {
+            afterSend(this);
         }
     }
     console.log(JSON.stringify(modificarPedido));
     sender.send(JSON.stringify(modificarPedido));
+}
+
+function afterSend(response) {
+    let responseText = JSON.parse(response.responseText).Mensaje;
+    if (response.status === 201) {
+        if (alert(responseText)) { }
+        else window.location.reload();
+        console.log(response);
+    } else {
+        alert(responseText);
+    }
 }

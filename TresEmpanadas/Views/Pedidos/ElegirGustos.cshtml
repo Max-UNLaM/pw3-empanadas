@@ -7,7 +7,8 @@
 <h2>Elegir</h2>
 <div class="row">
     <ul class="list-group">
-        <li class="list-group-item">Total Empanadas: @Model.CantidadEmpanadas</li>
+        <li class="list-group-item">@Model.Pedido.NombreNegocio</li>
+        <li class="list-group-item">Total Empanadas ya elegidas: @Model.CantidadEmpanadas</li>
         <li class="list-group-item">Precio por empanada: $@Model.Pedido.PrecioUnidad</li>
         <li class="list-group-item">Precio por docena: $@Model.Pedido.PrecioDocena</li>
     </ul>

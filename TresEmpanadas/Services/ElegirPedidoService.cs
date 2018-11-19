@@ -17,7 +17,15 @@ namespace TresEmpanadas.Services
             var invitacionPedidoService = new InvitacionPedidoService();
             Pedido pedido = pedidoService.BuscarPedidoPorId(idPedido);
             var gustosDelPedido = gustoService.GustosPedidos(pedido);
-            int cantidadEmpa = pedidoService.CantidadEmpanadas(pedido.IdPedido);
+            int cantidadEmpa;
+            try
+            { 
+                cantidadEmpa = pedidoService.CantidadEmpanadas(pedido.IdPedido);
+            }
+            catch
+            {
+                cantidadEmpa = 0;
+            }
             int precioTotal = cantidadEmpa * pedido.PrecioUnidad;
             return new ElegirGusto {
                 GustoEmpanadas = Entities.GustoEmpanada.ToList(),
