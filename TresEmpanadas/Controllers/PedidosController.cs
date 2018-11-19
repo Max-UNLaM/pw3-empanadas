@@ -24,7 +24,9 @@ namespace TresEmpanadas.Controllers
                     if (idPedido == null)
                     {
                         ViewBag.conModelo = false;
-                        return View();
+                    //Pedido pedido = new Pedido();
+                    //return View(pedido);
+                    return View();
                     }
                     else
                     {
