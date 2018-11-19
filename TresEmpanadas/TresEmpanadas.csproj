@@ -222,30 +222,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="GustoEmpanada.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InvitacionPedido.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="InvitacionPedidoGustoEmpanadaUsuario.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model1.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Model1.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Model1.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Models\GustoPedido.cs" />
     <Compile Include="Models\ViewModels\ElegirGusto.cs" />
     <Compile Include="Pedido.cs">
@@ -283,6 +259,16 @@
     <Content Include="Content\Images\sliders\800_400empa1.jpg" />
     <Content Include="Content\Images\sliders\800_400empa2.jpg" />
     <Content Include="Content\Images\sliders\800_400empa3.jpg" />
+    <Content Include="Entitie.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Entitie.edmx</DependentUpon>
+      <LastGenOutput>Entitie.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Entitie.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Entitie.edmx</DependentUpon>
+      <LastGenOutput>Entitie.cs</LastGenOutput>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
