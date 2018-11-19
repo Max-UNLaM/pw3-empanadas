@@ -70,6 +70,70 @@ namespace TresEmpanadas.Services
             int idGenerado = pedido.IdPedido;
             return idGenerado;
         }
+        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        {
+            var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
+            pedidoBuscado.GustoEmpanada.Clear();
+            foreach (var item in gustos)
+            {
+                GustoEmpanada gustoEmpanada = Contexto.GustoEmpanada.Find(item);
+                pedidoBuscado.GustoEmpanada.Add(gustoEmpanada);
+            }
+            pedidoBuscado.NombreNegocio = pedido.NombreNegocio;
+            pedidoBuscado.PrecioDocena = pedido.PrecioDocena;
+            pedidoBuscado.PrecioUnidad = pedido.PrecioUnidad;
+            pedidoBuscado.FechaCreacion = pedido.FechaCreacion;
+            pedidoBuscado.FechaModificacion = pedido.FechaModificacion;
+            pedidoBuscado.Descripcion = pedido.Descripcion;
+            Contexto.SaveChanges();
+            foreach (var invitados in usuariosInvitados)
+            {
+                Boolean crearUsuario = true;
+                foreach (var usuario in Contexto.Usuario)
+                {
+                    if (usuario.Email.Equals(invitados))
+                    {
+                        crearUsuario = false;
+                    }
+                }
+                if (crearUsuario)
+                {
+                    Usuario usuarioCrear = new Usuario();
+                    usuarioCrear.Email = invitados;
+                    usuarioCrear.Password = "test1234";
+                    Contexto.Usuario.Add(usuarioCrear);
+                    Contexto.SaveChanges();
+                }
+            }
+            // Lista de invitaciones del pedido a editar
+            var listaInvitacionesPedido = Contexto.InvitacionPedido.Where(ped => ped.IdPedido == pedidoBuscado.IdPedido).ToList();
+
+            //Debe crear invitacion solo si la invitacion no existe 
+            foreach (var item in usuariosInvitados)
+            {
+                Boolean crearInvitacion = true;
+                var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
+                foreach(var usuarioInvitacion in listaInvitacionesPedido)
+                {
+                    if (usu.IdUsuario == usuarioInvitacion.IdUsuario) {
+                        crearInvitacion = false;
+                        break;
+                    }
+                }
+                if (crearInvitacion)
+                {
+                    InvitacionPedido invitacion = new InvitacionPedido();
+                    var guid = Guid.NewGuid();
+                    invitacion.IdUsuario = usu.IdUsuario;
+                    invitacion.IdPedido = pedido.IdPedido;
+                    invitacion.Token = guid;
+                    invitacion.Completado = true;
+                    Contexto.InvitacionPedido.Add(invitacion);
+                    Contexto.SaveChanges();
+                }
+            }
+
+        }
 
         // Listado de pedidos que estan asociados a un usuario
         public List<Pedido> ListadoPedidosAsociadosUsuario()
@@ -181,10 +245,7 @@ namespace TresEmpanadas.Services
             return pedido.IdEstadoPedido == 1 ? true : false;
         }
 
-        public Pedido EditarPedido(int idPedido)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public bool EstadoPedido(int idPedido)
         {
@@ -257,6 +318,10 @@ namespace TresEmpanadas.Services
             var pedidos = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(
                 inv => inv.IdPedido == id);
             return pedidos.Sum(p => p.Cantidad);
+        }
+        public string[] CargarOpciones() {
+            string[] opciones = { "A Nadie", "Re-enviar Invitación a Todos", "Enviar sólo a los Nuevos", "Re - enviar sólo a los que no eligieron gustos" };
+            return opciones;
         }
 
     }
