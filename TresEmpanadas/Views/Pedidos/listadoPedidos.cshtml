@@ -1,12 +1,8 @@
 ﻿@model IEnumerable<TresEmpanadas.Pedido>
-<script>
 
-
-
-</script>
     @if (!string.IsNullOrEmpty(ViewBag.pedidoEliminado))
     {
-        <h2 class="alert-success well">El pedido " @ViewBag.pedidoEliminado " a sido eliminado</h2>
+        <h2 class="alert-danger well">El pedido " @ViewBag.pedidoEliminado " a sido eliminado</h2>
     }
 <table class="table">
 

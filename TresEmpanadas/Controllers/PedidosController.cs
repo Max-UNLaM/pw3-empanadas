@@ -43,7 +43,9 @@ namespace TresEmpanadas.Controllers
         [HttpPost]
         public ActionResult GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
         {
-            servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
+            var idPedidoRetornado = servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
+            ViewBag.NombrePedido = servicioPedido.BuscarPedidoPorId(idPedidoRetornado).NombreNegocio;
+            ViewBag.IdPedido = idPedidoRetornado;
             return View("PedidoIniciado");
         }
 
