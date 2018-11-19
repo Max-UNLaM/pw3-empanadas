@@ -101,7 +101,7 @@
 
                         }
                     </select>
-                    
+                   @Html.ValidationMessage("Gustos[]") 
 
                 </div>
                 @*@Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -142,11 +142,6 @@
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="reset" value="Cancelar" class="btn-danger" />
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <p><a href="~/Pedidos/ListadoPedidos" class="btn btn-primary btn-lg">Listado Pedidos &raquo;</a></p>
         </div>
     </div>
 </div>
