@@ -1,0 +1,157 @@
+﻿@model TresEmpanadas.Pedido
+
+@using (Html.BeginForm("GuardarPedido","Pedidos")) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Pedido</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="form-row">
+        <div class="form-group">
+            @Html.LabelFor(model => model.NombreNegocio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.NombreNegocio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NombreNegocio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descripcion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Descripcion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrecioUnidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.PrecioUnidad, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PrecioUnidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.InvitacionPedido, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.InvitacionPedido, ((MultiSelectList)ViewBag.usuariosDisponibles), htmlAttributes: new { @class = "form-control", multiple = "multiple" })
+                    @Html.ValidationMessageFor(model => model.InvitacionPedido, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+            @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FechaModificacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.FechaModificacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FechaModificacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrecioDocena, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.PrecioDocena, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PrecioDocena, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    <select name="gustos[]" multiple="multiple" size="7" class="form-control" id="gustos[]" required>
+                        <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
+                        @foreach (var item in ((List<GustoEmpanada>)ViewBag.gustosEmpanadas))
+                        {
+                            if (ViewBag.conModelo)
+                            {
+                                Boolean fueSeleccionado = false;
+                                foreach (var item2 in (Model.GustoEmpanada))
+                                {
+                                    if (item.IdGustoEmpanada == item2.IdGustoEmpanada)
+                                    {
+                                        fueSeleccionado = true;
+                                    }
+                                }
+                                if (fueSeleccionado)
+                                {
+                                    <option value="@item.IdGustoEmpanada" selected>@item.Nombre</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.IdGustoEmpanada">@item.Nombre</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="@item.IdGustoEmpanada">@item.Nombre</option>
+                            }
+
+                        }
+                    </select>
+                    
+
+                </div>
+                @*@Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    <select name="gustos[]" multiple="multiple" size="7" class="form-control">
+                        <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
+                        @foreach (var item in (Model.GustoEmpanada))
+                        {
+                            <option value="@item.IdGustoEmpanada" selected>@item.Nombre</option>
+                        }
+                    </select>
+
+                </div>*@
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.Label("Invitados", htmlAttributes: new { @class = "control-label col-md-2" })
+                <br />
+                <div class="col-6">
+                    <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]" required="required">
+                        <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
+                        @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
+                        {
+                            <option value="@Items.Text" spellcheck="true">@Items.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Crear Pedido" class="btn-primary" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="reset" value="Cancelar" class="btn-danger" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <p><a href="~/Pedidos/ListadoPedidos" class="btn btn-primary btn-lg">Listado Pedidos &raquo;</a></p>
+        </div>
+    </div>
+</div>
+        }
+
+        @section Scripts {
+            @Scripts.Render("~/bundles/jqueryval")
+        }

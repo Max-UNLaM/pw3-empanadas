@@ -1,0 +1,74 @@
+﻿@model IEnumerable<TresEmpanadas.Pedido>
+
+    @if (!string.IsNullOrEmpty(ViewBag.pedidoEliminado))
+    {
+        <h2 class="alert-danger well">El pedido " @ViewBag.pedidoEliminado " a sido eliminado</h2>
+    }
+<table class="table">
+
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NombreNegocio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaCreacion)
+        </th>
+        <th>
+            @Html.DisplayName("Estado Pedido")
+        </th>
+        <th>
+            @Html.DisplayName("Rol")
+        </th>
+        <th>
+            @Html.DisplayName("Acciones")
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in ((List<Pedido>)ViewBag.pedidosUsuario))
+    {
+        <tr>
+            <td>
+                <label value=""> @item.NombreNegocio</label>
+                @Html.HiddenFor(modelItem => item.IdPedido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaCreacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EstadoPedido.Nombre)
+            </td>
+            @if (Convert.ToInt32(System.Web.HttpContext.Current.Session["IdUsuario"]) == item.IdUsuarioResponsable)
+            {
+                <td>
+                    @Html.Raw("Responsable")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdPedido)
+                    @Html.ActionLink("Editar", "EditarPedido", new { idPedido = item.IdPedido })|
+                    @Html.ActionLink("Detalle", "DetallePedido", new { idPedido = item.IdPedido }) |
+                    @Html.ActionLink("Elegir Gustos", "ElegirGustos", new { idPedido = item.IdPedido }) |
+                    @Html.ActionLink("Eliminar", "EliminarPedido", new { idPedido = item.IdPedido })|
+                    @Html.ActionLink("Clonar", "IniciarPedido", new { idPedido = item.IdPedido })|
+                    @* <input type="button" value="Eliminar Js" id=@item.IdPedido class="btn-block" />*@
+                </td>
+            }
+            else
+            {
+                <td>
+                    @Html.Raw("Invitado")
+                </td>
+                <td>
+                    @Html.ActionLink("DetallePedido", "DetallePedido", new { idPedido = item.IdPedido })|
+                    @Html.ActionLink("Editar", "EditarPedido", new { idPedido = item.IdPedido })|
+                    @Html.ActionLink("Clonar Pedido", "IniciarPedido", new { idPedido = item.IdPedido })
+                </td>
+            }
+
+
+
+        </tr>
+    }
+
+</table>
+<p><a href="~/Pedidos/IniciarPedido" class="btn btn-primary btn-lg">Nuevo &raquo;</a></p>

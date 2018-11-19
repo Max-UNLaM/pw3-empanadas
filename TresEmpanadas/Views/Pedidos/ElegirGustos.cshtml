@@ -1,0 +1,69 @@
+﻿@model TresEmpanadas.Models.ViewModels.ElegirGusto
+
+@{
+    ViewBag.Title = "Elegir";
+}
+
+<h2>Elegir</h2>
+<div class="row">
+    <ul class="list-group">
+        <li class="list-group-item">@Model.Pedido.NombreNegocio</li>
+        <li class="list-group-item">Total Empanadas ya elegidas: @Model.CantidadEmpanadas</li>
+        <li class="list-group-item">Precio por empanada: $@Model.Pedido.PrecioUnidad</li>
+        <li class="list-group-item">Precio por docena: $@Model.Pedido.PrecioDocena</li>
+    </ul>
+</div>
+
+<div class="row">
+    <table>
+        <tr>
+            <th>Usuario</th>
+            <th>Gusto</th>
+            <th>Cantidad</th>
+        </tr>
+        @foreach (var gusto in Model.GustosPedidos)
+        {
+            <tr>
+                <td>@gusto.NombreUsuario</td>
+                <td>@gusto.NombreGustoEmpanada</td>
+                <td>@gusto.Cantidad</td>
+            </tr>
+        }
+    </table>
+</div>
+
+<div class="container">
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Modificar mis gustos
+    </button>
+    <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+            <table id="tabla-alta-gustos">
+                <tr>
+                    <th>Gusto</th>
+                    <th>Cantidad</th>
+                </tr>
+                <tr></tr>
+            </table>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-success" onclick="agregarGusto()">Agregar</button>
+            <button class="btn btn-danger" onclick="eliminarFila()">Eliminar</button>
+        </div>
+        <div class="btn-group" role="group">
+            <button class="btn btn-primary" onclick="enviarGustos()">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<div class="d-none">
+    <div id="token-invitacion">@Model.Token</div>
+    <select id="select-gustos-empa">
+        @foreach (var gustoEmpa in Model.GustoEmpanadas)
+        {
+           <option data-elemento="gustoEmpanada" value="@gustoEmpa.IdGustoEmpanada">@gustoEmpa.Nombre</option>
+        }
+    </select>
+</div>
+
+@Scripts.Render("~/Scripts/Pedidos/editar-pedido.js")
