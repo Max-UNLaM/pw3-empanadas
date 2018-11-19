@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TresEmpanadas.Models.ViewModels;
 using TresEmpanadas.Services;
 namespace TresEmpanadas.Controllers
 {
@@ -15,20 +16,27 @@ namespace TresEmpanadas.Controllers
         // Iniciar Pedido
         public ActionResult IniciarPedido(int? idPedido)
         {
-            System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
-            ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-            ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
-            if (idPedido == null)
+            if (Session["idUsuario"] != null)
             {
-                ViewBag.conModelo = false;
-                return View();
+                        //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                    ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    if (idPedido == null)
+                    {
+                        ViewBag.conModelo = false;
+                        return View();
+                    }
+                    else
+                    {
+                        ViewBag.conModelo = true;
+                        int idParametro = (int)idPedido;
+                        Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
+                        return View(pedidoBuscado);
+                    }
             }
             else
             {
-                ViewBag.conModelo = true;
-                int idParametro = (int)idPedido;
-                Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
-                return View(pedidoBuscado);
+                return Redirect("/Home/Login?redirigir=/Pedidos/IniciarPedido/");
             }
         }
 
@@ -36,7 +44,9 @@ namespace TresEmpanadas.Controllers
         [HttpPost]
         public ActionResult GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
         {
-            servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
+            var idPedidoRetornado = servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
+            ViewBag.NombrePedido = servicioPedido.BuscarPedidoPorId(idPedidoRetornado).NombreNegocio;
+            ViewBag.IdPedido = idPedidoRetornado;
             return View("PedidoIniciado");
         }
 
@@ -61,31 +71,56 @@ namespace TresEmpanadas.Controllers
         //Detalle Pedidos
         public ActionResult DetallePedido(int? idPedido)
         {
-            Pedido detallePedido;
-            if (idPedido != null)
+            if (Session["idUsuario"] != null)
             {
-                detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
-            }
-            else
-            {
-                int idRecibido = (int)TempData["idPedido"];
-                if (idRecibido > 0)
+                Pedido detallePedido;
+                if (idPedido != null)
                 {
-                    detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
+                    detallePedido = servicioPedido.BuscarPedidoPorId((int)idPedido);
                 }
                 else
                 {
-                    return View();
+                    int idRecibido = (int)TempData["idPedido"];
+                    if (idRecibido > 0)
+                    {
+                        detallePedido = servicioPedido.BuscarPedidoPorId((int)idRecibido);
+                    }
+                    else
+                    {
+                        return View();
+                    }
                 }
+                ViewBag.detallePedido = detallePedido;
+                return View(detallePedido);
             }
-            ViewBag.detallePedido = detallePedido;
-            return View(detallePedido);
+            else
+            {
+                string url;
+                if (idPedido != null)
+                {
+                       url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido="+idPedido;
+                   
+                }
+                else
+                {
+                    int idRecibido = (int)TempData["idPedido"];
+                    if (idRecibido > 0)
+                    {
+                        url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido=" +idRecibido;
+                    }
+                    else
+                    {
+                        return Redirect("/Home/Login?redirigir=/Pedidos/DetallePedido/");
+                    }
+                }
+                return Redirect(url);
+            }
 
-        }
+            }
 
         //Eliminar Pedidos
 
-        public RedirectToRouteResult Eliminar(int idPedido) 
+        public RedirectToRouteResult Eliminar(int idPedido)
         {
             var nombrePedidoEliminado = servicioPedido.BuscarPedidoPorId(idPedido);
             servicioPedido.EliminarPedido(idPedido);
@@ -118,7 +153,8 @@ namespace TresEmpanadas.Controllers
             Boolean estadoPedido = servicioPedido.EstadoPedido(idPedido);
             if (estadoPedido)
             {
-                System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                
+                ViewBag.opciones = servicioPedido.CargarOpciones();
                 ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
                 ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
                 ViewBag.conModelo = true;
@@ -133,6 +169,35 @@ namespace TresEmpanadas.Controllers
                 //return View("",detallePedido);
                 TempData["idPedido"] = idPedido;
                 return RedirectToAction("DetallePedido");
+            }
+        }
+        [HttpPost]
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados) {
+
+            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados);
+            return RedirectToAction("ListadoPedidos");   
+        }
+
+        public ActionResult ElegirGustos()
+        {
+            int idPedido;
+            try
+            {
+
+                idPedido = Int32.Parse(Request.QueryString["IdPedido"]);
+            }
+            catch
+            {
+                return RedirectToAction("ListadoPedidos");
+            }
+            var elegirPedidoService = new ElegirPedidoService();
+            try
+            {
+                return View(elegirPedidoService.BuildElegirPedido(idPedido));
+            }
+            catch
+            {
+                return RedirectToAction("ListadoPedidos");
             }
         }
     }
