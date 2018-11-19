@@ -7,7 +7,8 @@ using TresEmpanadas.Api.Models;
 
 namespace TresEmpanadas.Services
 {
-    public class PedidoService
+    public class 
+        PedidoService
     {
         Entities Contexto = new Entities();
         //Listado de Estado de los pedidos
@@ -16,14 +17,16 @@ namespace TresEmpanadas.Services
             var estados = Contexto.EstadoPedido.ToList();
             return estados;
         }
+
         //Listado de gustos de empanadas
         public List<GustoEmpanada> ListarGustosEmpanadas()
         {
             var gustosEmpanadas = Contexto.GustoEmpanada.ToList();
             return gustosEmpanadas;
         }
+
         // Guardar Pedido
-        public void GuardarPedido(Pedido pedido, int?[] gustos, int?[] usuariosInvitados)
+        public int GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
         {
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
@@ -35,18 +38,37 @@ namespace TresEmpanadas.Services
             }
             Contexto.Pedido.Add(pedido);
             Contexto.SaveChanges();
-            foreach (var item in usuariosInvitados)
+            foreach (var invitados in usuariosInvitados) {
+                Boolean crearUsuario = true;
+                foreach (var usuario in Contexto.Usuario) {
+                    if (usuario.Email.Equals(invitados))
+                    {
+                        crearUsuario = false;
+                    }
+                }
+                if (crearUsuario) {
+                    Usuario usuarioCrear = new Usuario();
+                    usuarioCrear.Email = invitados;
+                    usuarioCrear.Password = "test1234";
+                    Contexto.Usuario.Add(usuarioCrear);
+                    Contexto.SaveChanges();
+                }
+            }
+
+            foreach (var item in usuariosInvitados) 
             {
                 InvitacionPedido invitacion = new InvitacionPedido();
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
-                invitacion.IdUsuario = (int)item;
+                var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
+                invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
             int idGenerado = pedido.IdPedido;
+            return idGenerado;
         }
 
         // Listado de pedidos que estan asociados a un usuario

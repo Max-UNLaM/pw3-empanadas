@@ -71,7 +71,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-12">
-                    <select name="gustos[]" multiple="multiple" size="7" class="form-control">
+                    <select name="gustos[]" multiple="multiple" size="7" class="form-control" id="gustos[]" required>
                         <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
                         @foreach (var item in ((List<GustoEmpanada>)ViewBag.gustosEmpanadas))
                         {
@@ -101,6 +101,7 @@
 
                         }
                     </select>
+                    
 
                 </div>
                 @*@Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -118,29 +119,30 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                @Html.Label(" UsuariosInvitados", htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-12">
-                    <select name="usuariosInvitados" multiple="multiple" class="form-control">
+                @Html.Label("Invitados", htmlAttributes: new { @class = "control-label col-md-2" })
+                            @*<div class="col-md-12">
+                       <select name="usuariosInvitados[]" multiple="multiple" class="form-control">
+                           <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
+                           @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
+                           {
+                               <option value="@Items.Value" spellcheck="true">@Items.Text</option>
+                           }
+                       </select>
+                        <br />
+                    </div>*@
+                <br />
+                <div class="col-6">
+                    <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]" required="required">
                         <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
                         @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
                         {
-                            <option value="@Items.Value" spellcheck="true">@Items.Text</option>
+                            <option value="@Items.Text" spellcheck="true">@Items.Text</option>
                         }
                     </select>
-                    <br />
                 </div>
-
-                Nuevo Invitado :
-
-                @Html.TextBox("nuevoUsuario")
-                <select class="form-control" multiple="multiple">
-                    <option selected="selected">orange</option>
-                    <option>white</option>
-                    <option selected="selected">purple</option>
-                </select>
-                <br />
             </div>
         </div>
+        
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
@@ -159,10 +161,6 @@
     </div>
 </div>
         }
-
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
 
         @section Scripts {
             @Scripts.Render("~/bundles/jqueryval")

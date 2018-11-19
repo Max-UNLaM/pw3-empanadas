@@ -55,8 +55,30 @@
             });
         }
     });
-    $(".js-example-tokenizer").select2({
+    //$('#mySelect2').select2({
+    //    dropdownParent: $('#myModal')
+    //});
+    $('.js-example-basic-multiple').select2({
+        placeholder: 'Select an option',
+        tags: true ,
+        tokenSeparators: [',', ' ']
+    });
+    $('#js-prueba').select2({
+        placeholder: 'Seleccione un Invitado',
         tags: true,
-        tokenSeparators: [',', '']
-    }) 
+        tokenSeparators: [',', ' '],
+        createTag: function (params) {
+            // Don't offset to create a tag if there is no @ symbol
+            if (params.term.indexOf('@') === -1) {
+                // Return null to disable tag creation
+                return null;
+            }
+
+            return {
+                id: params.term,
+                text: params.term
+            }
+        }
+       // dropdownParent: $('#myModal')
+    });
 });
