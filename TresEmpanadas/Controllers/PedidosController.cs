@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using TresEmpanadas.Models;
 using TresEmpanadas.Models.ViewModels;
 using TresEmpanadas.Services;
 namespace TresEmpanadas.Controllers
@@ -100,15 +101,15 @@ namespace TresEmpanadas.Controllers
                 string url;
                 if (idPedido != null)
                 {
-                       url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido="+idPedido;
-                   
+                    url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido=" + idPedido;
+
                 }
                 else
                 {
                     int idRecibido = (int)TempData["idPedido"];
                     if (idRecibido > 0)
                     {
-                        url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido=" +idRecibido;
+                        url = "/Home/Login?redirigir=/Pedidos/DetallePedido?idPedido=" + idRecibido;
                     }
                     else
                     {
@@ -118,7 +119,7 @@ namespace TresEmpanadas.Controllers
                 return Redirect(url);
             }
 
-            }
+        }
 
         //Eliminar Pedidos
 
@@ -129,6 +130,7 @@ namespace TresEmpanadas.Controllers
             Session["pedidoEliminado"] = nombrePedidoEliminado.NombreNegocio;
             return RedirectToAction("ListadoPedidos");
         }
+
         public ActionResult EliminarPedido(int idPedido)
         {
             var pedido = servicioPedido.BuscarPedidoPorId(idPedido);
@@ -155,14 +157,26 @@ namespace TresEmpanadas.Controllers
             Boolean estadoPedido = servicioPedido.EstadoPedido(idPedido);
             if (estadoPedido)
             {
+                try
+                {
+                    ViewBag.opciones = servicioPedido.CargarOpciones();
+                    ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    ViewBag.conModelo = true;
+                    int idParametro = (int)idPedido;
+                    Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
+                    return View(pedidoBuscado);
+                }
+                catch
+                {
+                    return View("Error/Info", new DetailError
+                    {
+                        Title = "Error",
+                        Body = "No fue posible editar el pedido.",
+                        Link = ""
+                    });
+                }
                 
-                ViewBag.opciones = servicioPedido.CargarOpciones();
-                ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
-                ViewBag.conModelo = true;
-                int idParametro = (int)idPedido;
-                Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
-                return View(pedidoBuscado);
             }
             else
             {
@@ -174,10 +188,11 @@ namespace TresEmpanadas.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados) {
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        {
 
             servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados);
-            return RedirectToAction("ListadoPedidos");   
+            return RedirectToAction("ListadoPedidos");
         }
 
         public ActionResult ElegirGustos()
@@ -199,8 +214,22 @@ namespace TresEmpanadas.Controllers
             }
             catch
             {
-                return RedirectToAction("ListadoPedidos");
+                return View("Error/Info", new DetailError
+                {
+                    Title = "Error",
+                    Body = "No fue posible actualizar el pedido.",
+                    Link = ""
+                });
             }
+        }
+
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            filterContext.ExceptionHandled = true;
+            filterContext.Result = new ViewResult
+            {
+                ViewName = "~/Error/Index.cshtml"
+            };
         }
     }
 }
