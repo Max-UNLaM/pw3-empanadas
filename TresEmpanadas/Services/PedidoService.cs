@@ -56,7 +56,15 @@ namespace TresEmpanadas.Services
                     Contexto.SaveChanges();
                 }
             }
-
+            // Guardo una invitacion para el usuario responsable
+            InvitacionPedido miInvitacion = new InvitacionPedido();
+            var guid1 = Guid.NewGuid();
+            miInvitacion.IdPedido = pedido.IdPedido;
+            miInvitacion.IdUsuario = (int)valor;
+            miInvitacion.Token = guid1;
+            miInvitacion.Completado = true;
+            Contexto.InvitacionPedido.Add(miInvitacion);
+            Contexto.SaveChanges();
             foreach (var item in usuariosInvitados) 
             {
                 InvitacionPedido invitacion = new InvitacionPedido();
@@ -71,7 +79,8 @@ namespace TresEmpanadas.Services
                 Contexto.SaveChanges();
             }
 
-            var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).Single();
+            var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).SingleOrDefault();
+
             this.enviarEmail(null, null, responsable);
 
             int idGenerado = pedido.IdPedido;
