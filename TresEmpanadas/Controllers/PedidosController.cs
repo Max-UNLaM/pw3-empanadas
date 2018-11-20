@@ -52,7 +52,11 @@ namespace TresEmpanadas.Controllers
             ViewBag.IdPedido = idPedidoRetornado;
             return View("PedidoIniciado");
         }
-
+        public ActionResult CerrarPedido(int idPedido) {
+             servicioPedido.CerrarPedido(idPedido);
+            var result = 1;
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         //Listado Pedidos
         public ActionResult ListadoPedidos()
         {
