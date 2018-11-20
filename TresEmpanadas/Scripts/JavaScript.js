@@ -55,6 +55,29 @@
             });
         }
     });
+    $('#btnConfirmar').click(function () {
+         var idPedido;
+        idPedido = $("#IdHidden").val();
+        var valorElegido = confirm("¿Está seguro que desea Confirmar el pedido? Una vez confirmado no se podrá modificar.");
+        if (valorElegido) {
+            $.ajax({
+                url: "/Pedidos/CerrarPedido",
+                type: "GET",
+                data: { idPedido: idPedido },
+                success: function (result) {
+                    if (result == 1) {
+                        window.location.replace("/Pedidos/ListadoPedidos");
+                    }
+                },
+                error: function (x, y, z) {
+                    url = "/ListadoPedidos"
+                    window.location.href = url;
+                    alert("No se pudo eliminar!");
+                    alert(x + y + z);
+                }
+            });
+        }
+    });
     //$('#mySelect2').select2({
     //    dropdownParent: $('#myModal')
     //});

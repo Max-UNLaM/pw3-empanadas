@@ -171,9 +171,10 @@
             <input type="submit" value="Guardar Pedido" class="btn btn-primary" />
         </div>
     </div>
+    <input type="hidden" value=@Model.IdPedido id="IdHidden"/>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Confirmar" id="Confirmar" class="btn btn-success" />
+              <input type="button" value="Confirmar" id="btnConfirmar" class="btn btn-success" />
         </div>
     </div>
 </div>
