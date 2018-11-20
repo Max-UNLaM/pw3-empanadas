@@ -58,7 +58,7 @@
     $('#btnConfirmar').click(function () {
          var idPedido;
         idPedido = $("#IdHidden").val();
-        var valorElegido = confirm("¿Está seguro que desea Confirmar el pedido? Una vez confirmado no se podrá modificar." + idPedido);
+        var valorElegido = confirm("¿Está seguro que desea Confirmar el pedido? Una vez confirmado no se podrá modificar.");
         if (valorElegido) {
             $.ajax({
                 url: "/Pedidos/CerrarPedido",
