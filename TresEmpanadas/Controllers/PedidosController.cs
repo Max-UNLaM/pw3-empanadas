@@ -162,6 +162,7 @@ namespace TresEmpanadas.Controllers
                     ViewBag.opciones = servicioPedido.CargarOpciones();
                     ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
                     ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados(idPedido);
                     ViewBag.conModelo = true;
                     int idParametro = (int)idPedido;
                     Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
@@ -228,7 +229,7 @@ namespace TresEmpanadas.Controllers
             filterContext.ExceptionHandled = true;
             filterContext.Result = new ViewResult
             {
-                ViewName = "~/Error/Index.cshtml"
+                ViewName = "/Error/Index"
             };
         }
     }
