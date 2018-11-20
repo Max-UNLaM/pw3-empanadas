@@ -44,7 +44,7 @@
                     @Html.Raw("Responsable")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IdPedido)
+                   
                     @Html.ActionLink("Editar", "EditarPedido", new { idPedido = item.IdPedido })|
                     @Html.ActionLink("Detalle", "DetallePedido", new { idPedido = item.IdPedido }) |
                     @Html.ActionLink("Elegir Gustos", "ElegirGustos", new { idPedido = item.IdPedido }) |
