@@ -9,7 +9,7 @@ using TresEmpanadas.Api.Models;
 
 namespace TresEmpanadas.Services
 {
-    public class 
+    public class
         PedidoService
     {
         Entities Contexto = new Entities();
@@ -40,15 +40,18 @@ namespace TresEmpanadas.Services
             }
             Contexto.Pedido.Add(pedido);
             Contexto.SaveChanges();
-            foreach (var invitados in usuariosInvitados) {
+            foreach (var invitados in usuariosInvitados)
+            {
                 Boolean crearUsuario = true;
-                foreach (var usuario in Contexto.Usuario) {
+                foreach (var usuario in Contexto.Usuario)
+                {
                     if (usuario.Email.Equals(invitados))
                     {
                         crearUsuario = false;
                     }
                 }
-                if (crearUsuario) {
+                if (crearUsuario)
+                {
                     Usuario usuarioCrear = new Usuario();
                     usuarioCrear.Email = invitados;
                     usuarioCrear.Password = "test1234";
@@ -65,7 +68,7 @@ namespace TresEmpanadas.Services
             miInvitacion.Completado = true;
             Contexto.InvitacionPedido.Add(miInvitacion);
             Contexto.SaveChanges();
-            foreach (var item in usuariosInvitados) 
+            foreach (var item in usuariosInvitados)
             {
                 InvitacionPedido invitacion = new InvitacionPedido();
                 var guid = Guid.NewGuid();
@@ -74,7 +77,7 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
-                this.enviarEmail(invitacion, usu, null); 
+                this.enviarEmail(invitacion, usu, null);
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
@@ -129,9 +132,10 @@ namespace TresEmpanadas.Services
             {
                 Boolean crearInvitacion = true;
                 var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
-                foreach(var usuarioInvitacion in listaInvitacionesPedido)
+                foreach (var usuarioInvitacion in listaInvitacionesPedido)
                 {
-                    if (usu.IdUsuario == usuarioInvitacion.IdUsuario) {
+                    if (usu.IdUsuario == usuarioInvitacion.IdUsuario)
+                    {
                         crearInvitacion = false;
                         break;
                     }
@@ -153,31 +157,31 @@ namespace TresEmpanadas.Services
 
         public void enviarEmail(InvitacionPedido inv, Usuario usu, Guid? responsable)
         {
-            MailMessage mail = new MailMessage();    
+            MailMessage mail = new MailMessage();
             mail.From = new MailAddress("TresEmpanadas@gmail.com");
-            
-            if(responsable != null)
+
+            if (responsable != null)
                 mail.To.Add((string)HttpContext.Current.Session["email"]);
             else
                 mail.To.Add(usu.Email);
-            
+
 
             mail.Subject = "Pedido en TresEmpanadas";
             var link = "";
 
-            if(responsable != null)
+            if (responsable != null)
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + responsable;
             else
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + inv.Token;
 
-            mail.Body = "<a href=" + link + ">" +link+"</a>";
+            mail.Body = "<a href=" + link + ">" + link + "</a>";
             mail.IsBodyHtml = true;
 
             SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
             smtp.Credentials = new NetworkCredential("tresempanadaspw3@gmail.com", "pruebapw3");
             smtp.EnableSsl = true;
-            smtp.Send(mail);    
-            
+            smtp.Send(mail);
+
         }
 
         // Listado de pedidos que estan asociados a un usuario
@@ -290,7 +294,7 @@ namespace TresEmpanadas.Services
             return pedido.IdEstadoPedido == 1 ? true : false;
         }
 
-       
+
 
         public bool EstadoPedido(int idPedido)
         {
@@ -364,10 +368,25 @@ namespace TresEmpanadas.Services
                 inv => inv.IdPedido == id);
             return pedidos.Sum(p => p.Cantidad);
         }
-        public string[] CargarOpciones() {
+        public string[] CargarOpciones()
+        {
             string[] opciones = { "A Nadie", "Re-enviar Invitación a Todos", "Enviar sólo a los Nuevos", "Re - enviar sólo a los que no eligieron gustos" };
             return opciones;
         }
+
+        public List<Usuario> UsuariosInvitados(int pedidoId)
+        {
+            var invitaciones = Contexto.InvitacionPedido.Where(inv => inv.IdPedido == pedidoId).ToList();
+            var usuarios = new List<Usuario>();
+            foreach (var inv in invitaciones)
+            {
+                usuarios.Add(Contexto.Usuario.Single(us => us.IdUsuario == inv.IdUsuario));
+            }
+            return usuarios;
+        }
+
+
+
 
     }
 }

@@ -9,6 +9,12 @@ namespace TresEmpanadas.Controllers
 {
     public class ErrorController : Controller
     {
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+
 
         [HttpPost]
         public ActionResult Info(DetailError error)
