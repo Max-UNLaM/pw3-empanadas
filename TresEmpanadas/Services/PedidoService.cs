@@ -86,8 +86,16 @@ namespace TresEmpanadas.Services
             int idGenerado = pedido.IdPedido;
             return idGenerado;
         }
-        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        // Confirma terminar Pedio
+        public void CerrarPedido(int idPedido)
         {
+            var pedidoBuscado = BuscarPedidoPorId(idPedido);
+            pedidoBuscado.IdEstadoPedido = 2;
+            Contexto.SaveChanges();
+        }
+
+        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        { 
             var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
             pedidoBuscado.GustoEmpanada.Clear();
             foreach (var item in gustos)
