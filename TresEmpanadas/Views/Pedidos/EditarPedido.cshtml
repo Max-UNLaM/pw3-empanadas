@@ -150,7 +150,7 @@
                             <li class="list-group-item">Usuarios ya invitados</li>
                             @foreach (var usr in ViewBag.usuariosInvitados)
                             {
-                                <li class="list-group-item">@usr.Email</li>
+                                <li class="list-group-item">@usr.Email - <span class="badge badge-info">@usr.Estado</span></li>
                             }
                         </ul>
                     </div>

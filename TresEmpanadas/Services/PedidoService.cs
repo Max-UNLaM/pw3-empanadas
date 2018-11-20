@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using TresEmpanadas.Api.Models;
+using TresEmpanadas.Models.ViewModels;
 
 namespace TresEmpanadas.Services
 {
@@ -374,15 +375,25 @@ namespace TresEmpanadas.Services
             return opciones;
         }
 
-        public List<Usuario> UsuariosInvitados(int pedidoId)
+        public List<UsuariosInvitados> UsuariosInvitados(int pedidoId)
         {
             var invitaciones = Contexto.InvitacionPedido.Where(inv => inv.IdPedido == pedidoId).ToList();
             var usuarios = new List<Usuario>();
+            var usuariosInvitados = new List<UsuariosInvitados>();
             foreach (var inv in invitaciones)
             {
                 usuarios.Add(Contexto.Usuario.Single(us => us.IdUsuario == inv.IdUsuario));
             }
-            return usuarios;
+            foreach (var usr in usuarios)
+            {
+                var invPedido = Contexto.InvitacionPedido.First(inv => inv.IdUsuario == usr.IdUsuario && inv.IdPedido == pedidoId);
+                usuariosInvitados.Add(new UsuariosInvitados
+                {
+                    Email = usr.Email,
+                    Estado = invPedido.Completado == false ? "NO" : "SI"
+                });
+            }
+            return usuariosInvitados;
         }
 
 
