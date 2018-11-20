@@ -19,21 +19,23 @@ namespace TresEmpanadas.Controllers
         {
             if (Session["idUsuario"] != null)
             {
-                //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
-                ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
-                if (idPedido == null)
-                {
-                    ViewBag.conModelo = false;
+                        //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                    ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    if (idPedido == null)
+                    {
+                        ViewBag.conModelo = false;
+                    //Pedido pedido = new Pedido();
+                    //return View(pedido);
                     return View();
-                }
-                else
-                {
-                    ViewBag.conModelo = true;
-                    int idParametro = (int)idPedido;
-                    Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
-                    return View(pedidoBuscado);
-                }
+                    }
+                    else
+                    {
+                        ViewBag.conModelo = true;
+                        int idParametro = (int)idPedido;
+                        Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
+                        return View(pedidoBuscado);
+                    }
             }
             else
             {
