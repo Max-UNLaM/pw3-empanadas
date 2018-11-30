@@ -19,14 +19,18 @@ namespace TresEmpanadas.Controllers
         {
             if (Session["idUsuario"] != null)
             {
-                        //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
-                    ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
                     if (idPedido == null)
                     {
                         ViewBag.conModelo = false;
+                    //PedidoGusto pedidoGusto = new PedidoGusto();
+                    //pedidoGusto.Pedido = new Pedido();
+                    //pedidoGusto.GustoEmpanada = servicioPedido.ListarGustosEmpanadas();
                     //Pedido pedido = new Pedido();
-                    //return View(pedido);
+
+                    //return View(pedidoGusto);
                     return View();
                     }
                     else
@@ -47,10 +51,16 @@ namespace TresEmpanadas.Controllers
         [HttpPost]
         public ActionResult GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
         {
-            var idPedidoRetornado = servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
-            ViewBag.NombrePedido = servicioPedido.BuscarPedidoPorId(idPedidoRetornado).NombreNegocio;
-            ViewBag.IdPedido = idPedidoRetornado;
-            return View("PedidoIniciado");
+            if (ModelState.IsValid)
+            {
+                var idPedidoRetornado = servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
+                ViewBag.NombrePedido = servicioPedido.BuscarPedidoPorId(idPedidoRetornado).NombreNegocio;
+                ViewBag.IdPedido = idPedidoRetornado;
+                return View("PedidoIniciado");
+            }
+            else {
+                return View("IniciarPedido", pedido);
+            }
         }
         public ActionResult CerrarPedido(int idPedido) {
              servicioPedido.CerrarPedido(idPedido);
@@ -219,7 +229,7 @@ namespace TresEmpanadas.Controllers
             }
             catch
             {
-                return View("Error/Info", new DetailError
+                return View("~/Views/Error/Info", new DetailError
                 {
                     Title = "Error",
                     Body = "No fue posible actualizar el pedido.",
@@ -233,7 +243,7 @@ namespace TresEmpanadas.Controllers
             filterContext.ExceptionHandled = true;
             filterContext.Result = new ViewResult
             {
-                ViewName = "/Error/Index"
+                ViewName = "~/Views/Error/Index.cshtml"
             };
         }
     }

@@ -228,6 +228,7 @@
     <Compile Include="Models\Metadata\PedidoMetadata.cs" />
     <Compile Include="Models\ViewModels\ElegirGusto.cs" />
     <Compile Include="Models\ViewModels\Pedido.cs" />
+    <Compile Include="Models\ViewModels\PedidoGusto.cs" />
     <Compile Include="Models\ViewModels\UsuariosInvitados.cs" />
     <Compile Include="Pedido.cs">
       <DependentUpon>Entitie.tt</DependentUpon>

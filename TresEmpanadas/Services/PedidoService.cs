@@ -27,6 +27,11 @@ namespace TresEmpanadas.Services
             var gustosEmpanadas = Contexto.GustoEmpanada.ToList();
             return gustosEmpanadas;
         }
+        public MultiSelectList ListarGustos()
+        {
+            var listadoGustos = new MultiSelectList(Contexto.GustoEmpanada, "IdGustoEmpanada", "Nombre");
+            return listadoGustos;
+        }
 
         // Guardar Pedido
         public int GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
@@ -34,6 +39,7 @@ namespace TresEmpanadas.Services
             var valor = HttpContext.Current.Session["IdUsuario"] as int?;
             pedido.IdUsuarioResponsable = (int)valor;
             pedido.IdEstadoPedido = 1;
+            pedido.FechaCreacion = DateTime.Now;
             foreach (var item in gustos)
             {
                 GustoEmpanada gustoEmpanada = Contexto.GustoEmpanada.Find(item);
@@ -78,14 +84,14 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
-                this.enviarEmail(invitacion, usu, null);
+                //this.enviarEmail(invitacion, usu, null);
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
 
-            var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).SingleOrDefault();
+            var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).FirstOrDefault();
 
-            this.enviarEmail(null, null, responsable);
+            //this.enviarEmail(null, null, responsable);
 
             int idGenerado = pedido.IdPedido;
             return idGenerado;
@@ -110,55 +116,61 @@ namespace TresEmpanadas.Services
             pedidoBuscado.NombreNegocio = pedido.NombreNegocio;
             pedidoBuscado.PrecioDocena = pedido.PrecioDocena;
             pedidoBuscado.PrecioUnidad = pedido.PrecioUnidad;
-            pedidoBuscado.FechaCreacion = pedido.FechaCreacion;
-            pedidoBuscado.FechaModificacion = pedido.FechaModificacion;
+            //pedidoBuscado.FechaCreacion = pedido.FechaCreacion;
+            pedidoBuscado.FechaModificacion = DateTime.Now;
             pedidoBuscado.Descripcion = pedido.Descripcion;
             Contexto.SaveChanges();
-            foreach (var invitados in usuariosInvitados)
+            if (usuariosInvitados != null)
             {
-                Boolean crearUsuario = true;
-                foreach (var usuario in Contexto.Usuario)
+                foreach (var invitados in usuariosInvitados)
                 {
-                    if (usuario.Email.Equals(invitados))
+                    Boolean crearUsuario = true;
+                    foreach (var usuario in Contexto.Usuario)
                     {
-                        crearUsuario = false;
+                        if (usuario.Email.Equals(invitados))
+                        {
+                            crearUsuario = false;
+                        }
                     }
-                }
-                if (crearUsuario)
-                {
-                    Usuario usuarioCrear = new Usuario();
-                    usuarioCrear.Email = invitados;
-                    usuarioCrear.Password = "test1234";
-                    Contexto.Usuario.Add(usuarioCrear);
-                    Contexto.SaveChanges();
+                    if (crearUsuario)
+                    {
+                        Usuario usuarioCrear = new Usuario();
+                        usuarioCrear.Email = invitados;
+                        usuarioCrear.Password = "test1234";
+                        Contexto.Usuario.Add(usuarioCrear);
+                        Contexto.SaveChanges();
+                    }
                 }
             }
             // Lista de invitaciones del pedido a editar
             var listaInvitacionesPedido = Contexto.InvitacionPedido.Where(ped => ped.IdPedido == pedidoBuscado.IdPedido).ToList();
 
             //Debe crear invitacion solo si la invitacion no existe 
-            foreach (var item in usuariosInvitados)
+            if (usuariosInvitados != null)
             {
-                Boolean crearInvitacion = true;
-                var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
-                foreach (var usuarioInvitacion in listaInvitacionesPedido)
+                foreach (var item in usuariosInvitados)
                 {
-                    if (usu.IdUsuario == usuarioInvitacion.IdUsuario)
+                    Boolean crearInvitacion = true;
+                    var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
+                    foreach (var usuarioInvitacion in listaInvitacionesPedido)
                     {
-                        crearInvitacion = false;
-                        break;
+                        if (usu.IdUsuario == usuarioInvitacion.IdUsuario)
+                        {
+                            crearInvitacion = false;
+                            break;
+                        }
                     }
-                }
-                if (crearInvitacion)
-                {
-                    InvitacionPedido invitacion = new InvitacionPedido();
-                    var guid = Guid.NewGuid();
-                    invitacion.IdUsuario = usu.IdUsuario;
-                    invitacion.IdPedido = pedido.IdPedido;
-                    invitacion.Token = guid;
-                    invitacion.Completado = true;
-                    Contexto.InvitacionPedido.Add(invitacion);
-                    Contexto.SaveChanges();
+                    if (crearInvitacion)
+                    {
+                        InvitacionPedido invitacion = new InvitacionPedido();
+                        var guid = Guid.NewGuid();
+                        invitacion.IdUsuario = usu.IdUsuario;
+                        invitacion.IdPedido = pedido.IdPedido;
+                        invitacion.Token = guid;
+                        invitacion.Completado = true;
+                        Contexto.InvitacionPedido.Add(invitacion);
+                        Contexto.SaveChanges();
+                    }
                 }
             }
 
