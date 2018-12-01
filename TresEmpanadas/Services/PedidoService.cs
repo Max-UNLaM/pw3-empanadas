@@ -84,14 +84,14 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
-                this.enviarEmail(invitacion, usu, null);
+                //this.enviarEmail(invitacion, usu, null);
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
 
             var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).FirstOrDefault();
 
-            this.enviarEmail(null, null, responsable);
+            //this.enviarEmail(null, null, responsable);
 
             int idGenerado = pedido.IdPedido;
             return idGenerado;
@@ -101,21 +101,44 @@ namespace TresEmpanadas.Services
         {
             var pedidoBuscado = BuscarPedidoPorId(idPedido);
             var usuariosInvitados = Contexto.InvitacionPedido.Where(i => i.IdPedido == idPedido).ToList();
+            // Si el pedido tiene gustos de empanadas calculo el precio total
             var cantEmp = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(i => i.IdPedido == idPedido).ToList().Count;
+            var cantEmpSumadas = 0;
+            var precioTotal = 0;
+            var cantTotalUsu = 0;
+            var gastoUsu = 0;
+            var listaGustos = new List<string>();
+            var cantidadGustos = new List<int>();
             if (cantEmp != 0)
             {
-                var cantEmp1 = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(i => i.IdPedido == idPedido).Sum(a => a.Cantidad);
-                var cantDocena = cantEmp1 / 12;
-                var cantInd = cantEmp1 % 12;
-                var precioTotal = (pedidoBuscado.PrecioDocena * cantDocena) + (pedidoBuscado.PrecioUnidad * cantInd); 
+                cantEmpSumadas = Contexto.InvitacionPedidoGustoEmpanadaUsuario
+                                .Where(i => i.IdPedido == idPedido).Sum(a => a.Cantidad);
+                var cantDocena = cantEmpSumadas / 12;
+                var cantInd = cantEmpSumadas % 12;
+                precioTotal = (pedidoBuscado.PrecioDocena * cantDocena) + (pedidoBuscado.PrecioUnidad * cantInd); 
             }
-               
-            pedidoBuscado.IdEstadoPedido = 2;
+            foreach (var gastosUsuario in usuariosInvitados) {
+                var listaEmpanadasUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
+                                        (u => u.IdUsuario == gastosUsuario.IdUsuario && u.IdPedido == idPedido);
+                cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
+                gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                //var cantEmpUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
+                                    //(c => c.IdPedido==idPedido && c.IdUsuario==gastosUsuario.IdUsuario).Sum(ca => ca.Cantidad);
+                foreach (var item in listaEmpanadasUsuario) {
+                  var nombreGustos = Contexto.GustoEmpanada.Where
+                                 (g => g.IdGustoEmpanada == item.IdGustoEmpanada).Select(nom => nom.Nombre).FirstOrDefault();
+                  listaGustos.Add(nombreGustos);
+                    cantidadGustos.Add(item.Cantidad);
+                }
+            }
+            
+            //pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
 
         public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
         { 
+            //Busco el pedido a editar le limpio los gustos y le guardo los que selecciono 
             var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
             pedidoBuscado.GustoEmpanada.Clear();
             foreach (var item in gustos)
@@ -126,10 +149,10 @@ namespace TresEmpanadas.Services
             pedidoBuscado.NombreNegocio = pedido.NombreNegocio;
             pedidoBuscado.PrecioDocena = pedido.PrecioDocena;
             pedidoBuscado.PrecioUnidad = pedido.PrecioUnidad;
-            //pedidoBuscado.FechaCreacion = pedido.FechaCreacion;
             pedidoBuscado.FechaModificacion = DateTime.Now;
             pedidoBuscado.Descripcion = pedido.Descripcion;
             Contexto.SaveChanges();
+                // Si el usuario no existe lo creo
             if (usuariosInvitados != null)
             {
                 foreach (var invitados in usuariosInvitados)

@@ -60,6 +60,7 @@
                 </td>
                 <td>
                     @Html.ActionLink("Detalle", "DetallePedido", new { idPedido = item.IdPedido })|
+                    @Html.ActionLink("Elegir Gustos", "ElegirGustos", new { idPedido = item.IdPedido }) |
                     @Html.ActionLink("Clonar", "IniciarPedido", new { idPedido = item.IdPedido })
                 </td>
             }
