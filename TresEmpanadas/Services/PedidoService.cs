@@ -272,7 +272,6 @@ namespace TresEmpanadas.Services
 
         public Boolean ConfirmarPedido(ConfirmarPedido confirmarPedido)
         {
-            UsuarioService usuarioService = new UsuarioService();
             var gustoEmpanadaContext = Contexto.GustoEmpanada;
             var invitacionPedido = Contexto.InvitacionPedido.Single(ip => ip.Token == confirmarPedido.TokenInvitacion);
             var pedido = Contexto.Pedido.Single(ped => ped.IdPedido == invitacionPedido.IdPedido);
@@ -280,7 +279,7 @@ namespace TresEmpanadas.Services
             {
                 return false;
             }
-            LimpiarGustosPedido(pedido.IdPedido);
+            LimpiarGustosPedido(pedido.IdPedido, confirmarPedido.IdUsuario);
             foreach (var invPedido in confirmarPedido.GustosEmpanadaCantidades)
             {
                 AgregarGustoAInvitacion(new InvitacionPedidoGustoEmpanadaUsuario
@@ -307,7 +306,7 @@ namespace TresEmpanadas.Services
             return true;
         }
 
-        public Boolean LimpiarGustosPedido(int idPedido)
+        public Boolean LimpiarGustosPedido(int idPedido, int idUsuario)
         {
             var ipgeu = Contexto.InvitacionPedidoGustoEmpanadaUsuario;
             Pedido pedido = Contexto.Pedido.Single(p => p.IdPedido == idPedido);
@@ -315,8 +314,10 @@ namespace TresEmpanadas.Services
             {
                 return false;
             }
-            List<InvitacionPedidoGustoEmpanadaUsuario> actual = ipgeu.Where(
-                invi => invi.IdPedido == pedido.IdPedido).ToList();
+            List<InvitacionPedidoGustoEmpanadaUsuario> actual = ipgeu
+                .Where(invi => invi.IdPedido == pedido.IdPedido)
+                .Where(invi => invi.IdUsuario == idUsuario)
+                .ToList();
             actual.ForEach(invi => ipgeu.Remove(invi));
             Contexto.SaveChanges();
             return true;
