@@ -59,12 +59,12 @@ namespace TresEmpanadas.Api.Pedidos
                 return Request.CreateResponse(HttpStatusCode.NotFound, new RespuestaGenerica("No encontrado", e.Message));
             }
             catch (Exception e)
-            {
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, e.Message);
+            { 
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, new RespuestaGenerica("ERROR", String.Format("No se pudo efectuar la operación porque[{0}]", e.Message)));
             }
             if (result == true)
             {
-                return Request.CreateResponse(HttpStatusCode.Created, new RespuestaGenerica("Creado", "Pedido Confirmado"));
+                return Request.CreateResponse(HttpStatusCode.Created, new RespuestaGenerica("OK", "Gustos elegidos satisfactoriamente"));
             }
             else
             {
