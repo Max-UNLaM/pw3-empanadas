@@ -138,7 +138,7 @@ namespace TresEmpanadas.Services
         }
 
         public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
-        { 
+        {
             //Busco el pedido a editar le limpio los gustos y le guardo los que selecciono 
             var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
             pedidoBuscado.GustoEmpanada.Clear();
@@ -153,7 +153,9 @@ namespace TresEmpanadas.Services
             pedidoBuscado.FechaModificacion = DateTime.Now;
             pedidoBuscado.Descripcion = pedido.Descripcion;
             Contexto.SaveChanges();
-                // Si el usuario no existe lo creo
+
+            
+            // Si el usuario no existe lo creo
             if (usuariosInvitados != null)
             {
                 foreach (var invitados in usuariosInvitados)
@@ -178,7 +180,22 @@ namespace TresEmpanadas.Services
             }
             // Lista de invitaciones del pedido a editar
             var listaInvitacionesPedido = Contexto.InvitacionPedido.Where(ped => ped.IdPedido == pedidoBuscado.IdPedido).ToList();
+            //Eliminar si el usuario fue quitado
+            foreach (var it in listaInvitacionesPedido) {
+                Boolean existeInvitado = false;
+                foreach (var it2 in usuariosInvitados) {
+                    
+                    var usu = Contexto.Usuario.Where(email => email.Email.Equals(it2)).First();
+                    if (it.IdUsuario == usu.IdUsuario) {
+                        existeInvitado = true;
+                    }
+                }
+                if (!existeInvitado) {
+                    Contexto.InvitacionPedido.Remove(it);
+                    Contexto.SaveChanges();
+                }
 
+            }
             //Debe crear invitacion solo si la invitacion no existe 
             if (usuariosInvitados != null)
             {
