@@ -28,13 +28,19 @@ namespace TresEmpanadas.Services
             }
             int precioTotal = cantidadEmpa * pedido.PrecioUnidad;
             return new ElegirGusto {
-                GustoEmpanadas = Entities.GustoEmpanada.ToList(),
+                GustoEmpanadas = GustosEmpanadasDelPedido(idPedido),
                 GustosPedidos = gustoService.GustosPedidos(pedido),
                 Pedido = pedido,
                 CantidadEmpanadas = cantidadEmpa,
                 PrecioTotal = precioTotal,
                 Token = invitacionPedidoService.GetInvitacionPedido(idUsuario, pedido.IdPedido).Token
             };
+        }
+
+        internal List<GustoEmpanada> GustosEmpanadasDelPedido (int idPedido)
+        {
+            var pedido = Entities.Pedido.Find(idPedido);
+            return pedido.GustoEmpanada.ToList();
         }
     }
 }
