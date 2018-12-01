@@ -91,7 +91,7 @@ namespace TresEmpanadas.Services
 
             var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).FirstOrDefault();
 
-            this.enviarEmail(null, null, responsable);
+            // this.enviarEmail(null, null, responsable);
 
             int idGenerado = pedido.IdPedido;
             return idGenerado;
@@ -189,7 +189,7 @@ namespace TresEmpanadas.Services
         public void enviarEmail(InvitacionPedido inv, Usuario usu, Guid? responsable)
         {
             MailMessage mail = new MailMessage();
-            mail.From = new MailAddress("TresEmpanadas@gmail.com");
+            mail.From = new MailAddress("mailer@fragua.com.ar");
 
             if (responsable != null)
                 mail.To.Add((string)HttpContext.Current.Session["email"]);
@@ -204,14 +204,22 @@ namespace TresEmpanadas.Services
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + responsable;
             else
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + inv.Token;
-
             mail.Body = "<a href=" + link + ">" + link + "</a>";
             mail.IsBodyHtml = true;
-
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-            smtp.Credentials = new NetworkCredential("tresempanadaspw3@gmail.com", "pruebapw3");
-            smtp.EnableSsl = true;
-            smtp.Send(mail);
+            SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential("mailer@fragua.com.ar", "mailerloco");
+            smtp.EnableSsl = false;
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+            
 
         }
 

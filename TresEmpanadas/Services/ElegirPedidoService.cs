@@ -10,7 +10,7 @@ namespace TresEmpanadas.Services
     {
         public Entities Entities = new Entities();
 
-        public ElegirGusto BuildElegirPedido(int idPedido)
+        public ElegirGusto BuildElegirPedido(int idPedido, int idUsuario)
         {
             var pedidoService = new PedidoService();
             var gustoService = new GustoService();
@@ -33,7 +33,7 @@ namespace TresEmpanadas.Services
                 Pedido = pedido,
                 CantidadEmpanadas = cantidadEmpa,
                 PrecioTotal = precioTotal,
-                Token = invitacionPedidoService.GetInvitacionPedido(1, pedido.IdPedido).Token
+                Token = invitacionPedidoService.GetInvitacionPedido(idUsuario, pedido.IdPedido).Token
             };
         }
     }
