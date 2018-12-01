@@ -33,6 +33,7 @@ namespace TresEmpanadas.Services
                 Pedido = pedido,
                 CantidadEmpanadas = cantidadEmpa,
                 PrecioTotal = precioTotal,
+                IdUsuario = idUsuario,
                 Token = invitacionPedidoService.GetInvitacionPedido(idUsuario, pedido.IdPedido).Token
             };
         }
