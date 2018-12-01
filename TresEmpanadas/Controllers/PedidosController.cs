@@ -37,6 +37,7 @@ namespace TresEmpanadas.Controllers
                     {
                         ViewBag.conModelo = true;
                         int idParametro = (int)idPedido;
+                        ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados((int)idPedido);
                         Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
                         return View(pedidoBuscado);
                     }

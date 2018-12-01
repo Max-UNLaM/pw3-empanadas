@@ -81,6 +81,7 @@ namespace TresEmpanadas.Services
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
                 var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
+                if (usu.IdUsuario == valor) break;
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
@@ -91,7 +92,7 @@ namespace TresEmpanadas.Services
 
             var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).FirstOrDefault();
 
-            // this.enviarEmail(null, null, responsable);
+            this.enviarEmail(null, null, responsable);
 
             int idGenerado = pedido.IdPedido;
             return idGenerado;
@@ -126,7 +127,6 @@ namespace TresEmpanadas.Services
             pedidoBuscado.NombreNegocio = pedido.NombreNegocio;
             pedidoBuscado.PrecioDocena = pedido.PrecioDocena;
             pedidoBuscado.PrecioUnidad = pedido.PrecioUnidad;
-            //pedidoBuscado.FechaCreacion = pedido.FechaCreacion;
             pedidoBuscado.FechaModificacion = DateTime.Now;
             pedidoBuscado.Descripcion = pedido.Descripcion;
             Contexto.SaveChanges();

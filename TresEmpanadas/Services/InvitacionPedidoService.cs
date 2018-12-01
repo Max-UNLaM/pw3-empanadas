@@ -12,7 +12,7 @@ namespace TresEmpanadas.Services
 
         public InvitacionPedido GetInvitacionPedido(int idUsuario, int idPedido)
         {
-            return Entities.InvitacionPedido.Single(
+            return Entities.InvitacionPedido.First(
                 (inv) =>
                     inv.IdPedido == idPedido && inv.IdUsuario == idUsuario
                 );

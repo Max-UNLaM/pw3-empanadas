@@ -134,6 +134,17 @@
                         <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
                         @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
                         {
+                            if (ViewBag.conModelo)
+                            {
+                                foreach (var usr in ViewBag.usuariosInvitados)
+                                {
+                                    if (Items.Text.Equals(usr.Email))
+                                    {
+                                    <option value="@Items.Text" selected>@Items.Text</option>
+                                        break;
+                                    }
+                                }
+                            }
                             <option value="@Items.Text" spellcheck="true">@Items.Text</option>
                         }
                     </select>
