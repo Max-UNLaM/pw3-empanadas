@@ -84,14 +84,14 @@ namespace TresEmpanadas.Services
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
-                //this.enviarEmail(invitacion, usu, null);
+                this.enviarEmail(invitacion, usu, null);
                 Contexto.InvitacionPedido.Add(invitacion);
                 Contexto.SaveChanges();
             }
 
             var responsable = Contexto.InvitacionPedido.Where(i => i.IdUsuario == valor && i.IdPedido == pedido.IdPedido).Select(i => i.Token).FirstOrDefault();
 
-            //this.enviarEmail(null, null, responsable);
+            this.enviarEmail(null, null, responsable);
 
             int idGenerado = pedido.IdPedido;
             return idGenerado;
@@ -100,11 +100,21 @@ namespace TresEmpanadas.Services
         public void CerrarPedido(int idPedido)
         {
             var pedidoBuscado = BuscarPedidoPorId(idPedido);
+            var usuariosInvitados = Contexto.InvitacionPedido.Where(i => i.IdPedido == idPedido).ToList();
+            var cantEmp = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(i => i.IdPedido == idPedido).ToList().Count;
+            if (cantEmp != 0)
+            {
+                var cantEmp1 = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(i => i.IdPedido == idPedido).Sum(a => a.Cantidad);
+                var cantDocena = cantEmp1 / 12;
+                var cantInd = cantEmp1 % 12;
+                var precioTotal = (pedidoBuscado.PrecioDocena * cantDocena) + (pedidoBuscado.PrecioUnidad * cantInd); 
+            }
+               
             pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
 
-        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
         { 
             var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
             pedidoBuscado.GustoEmpanada.Clear();

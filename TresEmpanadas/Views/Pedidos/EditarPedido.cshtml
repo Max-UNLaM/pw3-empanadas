@@ -25,14 +25,19 @@
                 @Html.ValidationMessageFor(model => model.Descripcion, "", new { @class = "text-danger" })
             </div>
         </div>
-
+        <div class="col-md-4">
+            <div class="form-control">
+                @Html.DropDownList("Cat", new SelectList(ViewBag.opciones), "Re-enviar", new { @class = "control-label col-md-12" })
+                @Html.ValidationMessage("Cat")
+            </div>
+        </div>
         @*<div class="form-group">
-                @Html.LabelFor(model => model.InvitacionPedido, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(model => model.InvitacionPedido, ((MultiSelectList)ViewBag.usuariosDisponibles), htmlAttributes: new { @class = "form-control", multiple = "multiple" })
-                    @Html.ValidationMessageFor(model => model.InvitacionPedido, "", new { @class = "text-danger" })
-                </div>
-            </div>*@
+            @Html.LabelFor(model => model.InvitacionPedido, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.InvitacionPedido, ((MultiSelectList)ViewBag.usuariosDisponibles), htmlAttributes: new { @class = "form-control", multiple = "multiple" })
+                @Html.ValidationMessageFor(model => model.InvitacionPedido, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
 
     </div>
     <div class="form-row">
@@ -135,16 +140,40 @@
         Nuevo Invitado :
 
         @Html.TextBox("nuevoUsuario")*@
-                    <div class="col-md-6 flex-column">
-                        @Html.Label("Invitados", htmlAttributes: new { @class = "control-label" }) <br>
-                        <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]">
-                            <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                            @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
-                            {
-                                <option value="@Items.Text" spellcheck="true">@Items.Text</option>
-                            }
-                        </select>
-                    </div>
+                    @*<div class="col-md-6 flex-column">
+            @Html.Label("Invitados", htmlAttributes: new { @class = "control-label" }) <br>
+            <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]">
+                <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
+                @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
+                {
+                    <option value="@Items.Text" spellcheck="true">@Items.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <ul class="list-group">
+                <li class="list-group-item">Usuarios ya invitados</li>
+                @foreach (var usr in ViewBag.usuariosInvitados)
+                {
+                    <li class="list-group-item">@usr.Email - <span class="badge badge-info">@usr.Estado</span></li>
+                }
+            </ul>
+        </div>*@
+                <div class="col-md-6 flex-column">
+                     @Html.Label("Invitados", htmlAttributes: new { @class = "control-label" }) <br>
+                     <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]">
+                          <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
+                              @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles)){
+                                      foreach (var usr in ViewBag.usuariosInvitados){
+                                          if (Items.Text.Equals(usr.Email)){
+                                                <option value="@Items.Text" selected>@Items.Text</option>
+                                                 break;
+                                          }
+                                      }
+                                     <option value="@Items.Text" spellcheck="true">@Items.Text</option>
+                               }
+                      </select>
+                 </div>
                     <div class="col-md-6">
                         <ul class="list-group">
                             <li class="list-group-item">Usuarios ya invitados</li>
@@ -158,14 +187,6 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="form-control">
-            @Html.DropDownList("Cat", new SelectList(ViewBag.opciones), "Re-enviar",new { @class = "control-label col-md-12" })
-            @Html.ValidationMessage("Cat")
-        </div>
-    </div>
-    <br />
-    <br />
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Guardar Pedido" class="btn btn-primary" />
@@ -180,6 +201,6 @@
 </div>
         }
 
-        @section Scripts {
+        @*@section Scripts {
             @Scripts.Render("~/bundles/jqueryval")
-        }
+        }*@
