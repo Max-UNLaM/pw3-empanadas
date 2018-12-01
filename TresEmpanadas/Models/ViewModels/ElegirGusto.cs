@@ -14,5 +14,6 @@ namespace TresEmpanadas.Models.ViewModels
         public int CantidadEmpanadas { get; set; }
         public float PrecioTotal { get; set; }
         public Guid Token { get; set; }
+        public int IdUsuario { get; set; }
     }
 }

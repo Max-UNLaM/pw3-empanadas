@@ -37,6 +37,7 @@ namespace TresEmpanadas.Controllers
                     {
                         ViewBag.conModelo = true;
                         int idParametro = (int)idPedido;
+                        ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados((int)idPedido);
                         Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
                         return View(pedidoBuscado);
                     }
@@ -225,10 +226,12 @@ namespace TresEmpanadas.Controllers
             var elegirPedidoService = new ElegirPedidoService();
             try
             {
-                return View(elegirPedidoService.BuildElegirPedido(idPedido));
+                return View(elegirPedidoService.BuildElegirPedido(idPedido, (int)Session["idUsuario"]));
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return View("~/Views/Error/Info", new DetailError
                 {
                     Title = "Error",

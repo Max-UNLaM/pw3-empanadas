@@ -81,6 +81,7 @@ namespace TresEmpanadas.Services
                 var guid = Guid.NewGuid();
                 invitacion.IdPedido = pedido.IdPedido;
                 var usu = Contexto.Usuario.Where(emailUsu => emailUsu.Email.Equals(item)).First();
+                if (usu.IdUsuario == valor) break;
                 invitacion.IdUsuario = usu.IdUsuario;
                 invitacion.Token = guid;
                 invitacion.Completado = true;
@@ -212,7 +213,7 @@ namespace TresEmpanadas.Services
         public void enviarEmail(InvitacionPedido inv, Usuario usu, Guid? responsable)
         {
             MailMessage mail = new MailMessage();
-            mail.From = new MailAddress("TresEmpanadas@gmail.com");
+            mail.From = new MailAddress("mailer@fragua.com.ar");
 
             if (responsable != null)
                 mail.To.Add((string)HttpContext.Current.Session["email"]);
@@ -227,14 +228,22 @@ namespace TresEmpanadas.Services
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + responsable;
             else
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + inv.Token;
-
             mail.Body = "<a href=" + link + ">" + link + "</a>";
             mail.IsBodyHtml = true;
-
-            SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-            smtp.Credentials = new NetworkCredential("tresempanadaspw3@gmail.com", "pruebapw3");
-            smtp.EnableSsl = true;
-            smtp.Send(mail);
+            SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential("mailer@fragua.com.ar", "mailerloco");
+            smtp.EnableSsl = false;
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+            
 
         }
 
@@ -287,7 +296,6 @@ namespace TresEmpanadas.Services
 
         public Boolean ConfirmarPedido(ConfirmarPedido confirmarPedido)
         {
-            UsuarioService usuarioService = new UsuarioService();
             var gustoEmpanadaContext = Contexto.GustoEmpanada;
             var invitacionPedido = Contexto.InvitacionPedido.Single(ip => ip.Token == confirmarPedido.TokenInvitacion);
             var pedido = Contexto.Pedido.Single(ped => ped.IdPedido == invitacionPedido.IdPedido);
@@ -295,7 +303,7 @@ namespace TresEmpanadas.Services
             {
                 return false;
             }
-            LimpiarGustosPedido(pedido.IdPedido);
+            LimpiarGustosPedido(pedido.IdPedido, confirmarPedido.IdUsuario);
             foreach (var invPedido in confirmarPedido.GustosEmpanadaCantidades)
             {
                 AgregarGustoAInvitacion(new InvitacionPedidoGustoEmpanadaUsuario
@@ -322,7 +330,7 @@ namespace TresEmpanadas.Services
             return true;
         }
 
-        public Boolean LimpiarGustosPedido(int idPedido)
+        public Boolean LimpiarGustosPedido(int idPedido, int idUsuario)
         {
             var ipgeu = Contexto.InvitacionPedidoGustoEmpanadaUsuario;
             Pedido pedido = Contexto.Pedido.Single(p => p.IdPedido == idPedido);
@@ -330,8 +338,10 @@ namespace TresEmpanadas.Services
             {
                 return false;
             }
-            List<InvitacionPedidoGustoEmpanadaUsuario> actual = ipgeu.Where(
-                invi => invi.IdPedido == pedido.IdPedido).ToList();
+            List<InvitacionPedidoGustoEmpanadaUsuario> actual = ipgeu
+                .Where(invi => invi.IdPedido == pedido.IdPedido)
+                .Where(invi => invi.IdUsuario == idUsuario)
+                .ToList();
             actual.ForEach(invi => ipgeu.Remove(invi));
             Contexto.SaveChanges();
             return true;

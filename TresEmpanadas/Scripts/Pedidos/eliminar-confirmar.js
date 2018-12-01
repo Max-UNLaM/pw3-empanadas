@@ -2,7 +2,6 @@
     $("#btnEliminar").click(function () {
         var idPedido;
         idPedido = $("#IdHidden").val();
-        //Id : 1 
         var valorElegido = confirm("Esta seguro que desea Eliminar");
         if (valorElegido) {
             $.ajax({
@@ -14,13 +13,6 @@
                         window.location.replace("/Pedidos/ListadoPedidos");
                         alert("OK!");
                     }
-                    //if (result == 1) {
-                    //    $.ajax({
-                    //        url: "/Pedidos/ListadoPedidos",
-                    //        type: "GET",
-                    //    });
-
-                   // }
                 },
                 error: function (x, y, z) {
                     url = "/ListadoPedidos"
