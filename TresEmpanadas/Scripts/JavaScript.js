@@ -55,6 +55,23 @@
             });
         }
     });
+    $("#btn-primary").click(function () {
+        var select = document.getElementById("gustos[]").selectedIndex;
+        if (select == null || select == 0) {
+            $("#selectGustos").rules("add", {
+                required: true,
+                messages: {
+                    required: "<h4>El campo nombre es obligatorio</h4>"
+                }
+            });
+        }
+    });
+    //$("#selectGustos").rules("add", {
+    //    required: true,
+    //    messages: {
+    //        required: "<h4>El campo es obligatorio</h4>"
+    //    }
+    //})
     $('#btnConfirmar').click(function () {
          var idPedido;
         idPedido = $("#IdHidden").val();

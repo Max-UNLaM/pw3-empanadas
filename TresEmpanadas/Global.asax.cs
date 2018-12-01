@@ -18,7 +18,23 @@ namespace TresEmpanadas
             GlobalConfiguration.Configure(WebApiConfig.Register);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-           // Session["IdUsuario"] = string.Empty ;
+            // Session["IdUsuario"] = string.Empty ;
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+            {
+            Exception exception = Server.GetLastError();
+            if (exception != null)
+            {
+                //Log
+                if (HttpContext.Current.Server != null)
+                {
+                    //HttpContext.Current.Server.Transfer("/siteerror.aspx");
+                    // clear error on server
+                    //Server.ClearError();
+                    //Response.Redirect("~/Error/Index");
+                }
+            }
         }
     }
 }
