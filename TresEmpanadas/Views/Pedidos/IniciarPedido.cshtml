@@ -1,6 +1,6 @@
 ﻿@model TresEmpanadas.Pedido
 
-@using (Html.BeginForm("GuardarPedido","Pedidos")) 
+@using (Html.BeginForm("GuardarPedido","Pedidos", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return validateForm()" })) 
 {
     @Html.AntiForgeryToken()
     
@@ -140,7 +140,7 @@
                                 {
                                     if (Items.Text.Equals(usr.Email))
                                     {
-                                    <option value="@Items.Text" selected>@Items.Text</option>
+                                        <option value="@Items.Text" selected>@Items.Text</option>
                                         break;
                                     }
                                 }
@@ -148,6 +148,9 @@
                             <option value="@Items.Text" spellcheck="true">@Items.Text</option>
                         }
                     </select>
+                    <span class="text-danger field-validation-error hidden" data-valmsg-for="UsuariosInvitados" data-valmsg-replace="true">
+                        <span id="NombreNegocio-error" class="">Nombre requerido</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -168,4 +171,5 @@
 
         @section Scripts {
             @Scripts.Render("~/bundles/jqueryval")
+            @Scripts.Render("~/bundles/pedido")
         }

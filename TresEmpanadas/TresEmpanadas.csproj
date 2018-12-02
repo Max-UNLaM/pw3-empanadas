@@ -416,7 +416,8 @@
     <Content Include="Scripts\js\select2.js" />
     <Content Include="Scripts\js\select2.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\Pedidos\editar-pedido.js" />
+    <Content Include="Scripts\Pedidos\elegir-gustos.js" />
+    <Content Include="Scripts\Pedidos\validar-pedido.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
