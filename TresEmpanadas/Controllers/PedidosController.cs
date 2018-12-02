@@ -174,7 +174,6 @@ namespace TresEmpanadas.Controllers
             {
                 try
                 {
-                    ViewBag.opciones = servicioPedido.CargarOpciones();
                     ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
                     ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
                     ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados(idPedido);
@@ -204,10 +203,10 @@ namespace TresEmpanadas.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, int opcion_id)
         {
 
-            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, cat);
+            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, opcion_id);
             return RedirectToAction("ListadoPedidos");
         }
 
