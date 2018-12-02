@@ -2,7 +2,6 @@
     $("#btnEliminar").click(function () {
         var idPedido;
         idPedido = $("#IdHidden").val();
-        //Id : 1 
         var valorElegido = confirm("Esta seguro que desea Eliminar");
         if (valorElegido) {
             $.ajax({
@@ -14,13 +13,6 @@
                         window.location.replace("/Pedidos/ListadoPedidos");
                         alert("OK!");
                     }
-                    //if (result == 1) {
-                    //    $.ajax({
-                    //        url: "/Pedidos/ListadoPedidos",
-                    //        type: "GET",
-                    //    });
-
-                   // }
                 },
                 error: function (x, y, z) {
                     url = "/ListadoPedidos"
@@ -55,6 +47,23 @@
             });
         }
     });
+    $("#btn-primary").click(function () {
+        var select = document.getElementById("gustos[]").selectedIndex;
+        if (select == null || select == 0) {
+            $("#selectGustos").rules("add", {
+                required: true,
+                messages: {
+                    required: "<h4>El campo nombre es obligatorio</h4>"
+                }
+            });
+        }
+    });
+    //$("#selectGustos").rules("add", {
+    //    required: true,
+    //    messages: {
+    //        required: "<h4>El campo es obligatorio</h4>"
+    //    }
+    //})
     $('#btnConfirmar').click(function () {
          var idPedido;
         idPedido = $("#IdHidden").val();

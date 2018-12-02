@@ -3,7 +3,8 @@
 let editarPedidoElements = {
     tablaAltaGustos: document.getElementById('tabla-alta-gustos'),
     gustosEmpa: document.getElementById('select-gustos-empa').outerHTML,
-    token: document.getElementById('token-invitacion').innerText
+    token: document.getElementById('token-invitacion').innerText,
+    idUsuario: document.getElementById('id-usuario').innerText
 };
 
 const templates = {
@@ -34,7 +35,7 @@ function enviarGustos() {
     let validRows = [];
     let modificarPedido = {
         GustosEmpanadaCantidades: [],
-        IdUsuario: 1,
+        IdUsuario: editarPedidoElements.idUsuario,
         TokenInvitacion: editarPedidoElements.token
     }
     filas.forEach((fila) => {

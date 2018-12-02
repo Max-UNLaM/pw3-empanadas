@@ -19,20 +19,25 @@ namespace TresEmpanadas.Controllers
         {
             if (Session["idUsuario"] != null)
             {
-                        //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
-                    ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
+                ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
+                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
                     if (idPedido == null)
                     {
                         ViewBag.conModelo = false;
+                    //PedidoGusto pedidoGusto = new PedidoGusto();
+                    //pedidoGusto.Pedido = new Pedido();
+                    //pedidoGusto.GustoEmpanada = servicioPedido.ListarGustosEmpanadas();
                     //Pedido pedido = new Pedido();
-                    //return View(pedido);
+
+                    //return View(pedidoGusto);
                     return View();
                     }
                     else
                     {
                         ViewBag.conModelo = true;
                         int idParametro = (int)idPedido;
+                        ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados((int)idPedido);
                         Pedido pedidoBuscado = servicioPedido.BuscarPedidoPorId(idParametro);
                         return View(pedidoBuscado);
                     }
@@ -47,10 +52,16 @@ namespace TresEmpanadas.Controllers
         [HttpPost]
         public ActionResult GuardarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
         {
-            var idPedidoRetornado = servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
-            ViewBag.NombrePedido = servicioPedido.BuscarPedidoPorId(idPedidoRetornado).NombreNegocio;
-            ViewBag.IdPedido = idPedidoRetornado;
-            return View("PedidoIniciado");
+            if (ModelState.IsValid)
+            {
+                var idPedidoRetornado = servicioPedido.GuardarPedido(pedido, gustos, usuariosInvitados);
+                ViewBag.NombrePedido = servicioPedido.BuscarPedidoPorId(idPedidoRetornado).NombreNegocio;
+                ViewBag.IdPedido = idPedidoRetornado;
+                return View("PedidoIniciado");
+            }
+            else {
+                return View("IniciarPedido", pedido);
+            }
         }
         public ActionResult CerrarPedido(int idPedido) {
              servicioPedido.CerrarPedido(idPedido);
@@ -193,10 +204,10 @@ namespace TresEmpanadas.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados)
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
         {
 
-            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados);
+            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, cat);
             return RedirectToAction("ListadoPedidos");
         }
 
@@ -215,11 +226,13 @@ namespace TresEmpanadas.Controllers
             var elegirPedidoService = new ElegirPedidoService();
             try
             {
-                return View(elegirPedidoService.BuildElegirPedido(idPedido));
+                return View(elegirPedidoService.BuildElegirPedido(idPedido, (int)Session["idUsuario"]));
             }
-            catch
+            catch (Exception e)
             {
-                return View("Error/Info", new DetailError
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+                return View("~/Views/Error/Info", new DetailError
                 {
                     Title = "Error",
                     Body = "No fue posible actualizar el pedido.",
@@ -233,7 +246,7 @@ namespace TresEmpanadas.Controllers
             filterContext.ExceptionHandled = true;
             filterContext.Result = new ViewResult
             {
-                ViewName = "/Error/Index"
+                ViewName = "~/Views/Error/Index.cshtml"
             };
         }
     }

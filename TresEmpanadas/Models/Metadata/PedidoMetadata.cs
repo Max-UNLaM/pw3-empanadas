@@ -12,20 +12,19 @@ namespace TresEmpanadas.Models.Metadata
         [Required(ErrorMessage = "Nombre requerido")]
         [StringLength(200, ErrorMessage = "Debe tener como máximo 200 caracteres")]
         public string NombreNegocio { get; set; }
-
-        [Required(ErrorMessage = "Descripcion requerida")]
-        [StringLength(1024, ErrorMessage = "Debe tener como máximo 1024 caracteres")]
-        [Display(Name = "Descripción")]
-        public string Descripcion { get; set; }
-
+           
         [Required(ErrorMessage = "Precio unitario requerido")]
-        [DataType(DataType.Currency)]
         public int PrecioUnidad { get; set; }
 
         [Required(ErrorMessage = "Precio por docena es requerido")]
-        [DataType(DataType.Currency)]
         public int PrecioDocena { get; set; }
 
-             
+        [Required(ErrorMessage = "Debe Elegir un gusto de empanada")]
+        [DataType(DataType.Currency)]
+        public ICollection<InvitacionPedido> GustoEmpanada { get; set; }
+
+        [Required(ErrorMessage = "Debe Elegir un gusto de empanada")]
+        [DataType(DataType.Currency)]
+        public virtual ICollection<InvitacionPedido> InvitacionPedido { get; set; }
     }
 }
