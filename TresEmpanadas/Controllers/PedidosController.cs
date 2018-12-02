@@ -204,10 +204,10 @@ namespace TresEmpanadas.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, int opcion_id)
         {
 
-            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, cat);
+            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, opcion_id);
             return RedirectToAction("ListadoPedidos");
         }
 
