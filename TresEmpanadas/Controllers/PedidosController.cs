@@ -174,7 +174,6 @@ namespace TresEmpanadas.Controllers
             {
                 try
                 {
-                    ViewBag.opciones = servicioPedido.CargarOpciones();
                     ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
                     ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
                     ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados(idPedido);

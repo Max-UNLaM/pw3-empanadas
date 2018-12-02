@@ -185,9 +185,6 @@ namespace TresEmpanadas.Services
             foreach (var it in listaInvitacionesPedido)
             {
                 Boolean existeInvitado = false;
-
-                var usuInvitacionPedido = Contexto.Usuario.Where(u => u.IdUsuario == it.IdUsuario).First();
-
                 foreach (var it2 in usuariosInvitados)
                 {
                     var usu = Contexto.Usuario.Where(email => email.Email.Equals(it2)).First();
@@ -225,6 +222,8 @@ namespace TresEmpanadas.Services
                 {
                     if (it.Completado == false)
                     {
+                        var usuInvitacionPedido = Contexto.Usuario.Where(u => u.IdUsuario == it.IdUsuario).First();
+
                         InvitacionPedido invitacion = new InvitacionPedido();
                         var guid = Guid.NewGuid();
                         invitacion.Token = guid;
@@ -486,11 +485,6 @@ namespace TresEmpanadas.Services
             var pedidos = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(
                 inv => inv.IdPedido == id);
             return pedidos.Sum(p => p.Cantidad);
-        }
-        public string[] CargarOpciones()
-        {
-            string[] opciones = { "A Nadie", "Re-enviar Invitación a Todos", "Enviar sólo a los Nuevos", "Re - enviar sólo a los que no eligieron gustos" };
-            return opciones;
         }
 
         public List<UsuariosInvitados> UsuariosInvitados(int pedidoId)
