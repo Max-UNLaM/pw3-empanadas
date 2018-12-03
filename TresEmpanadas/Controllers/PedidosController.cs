@@ -211,22 +211,21 @@ namespace TresEmpanadas.Controllers
             return RedirectToAction("ListadoPedidos");
         }
 
-        public ActionResult ElegirGustos()
+        [HttpGet]
+        public ActionResult ElegirGustos(string idPedido = "", string token = "")
         {
-            int idPedido;
-            try
-            {
-
-                idPedido = Int32.Parse(Request.QueryString["IdPedido"]);
-            }
-            catch
+            var lele = Int32.Parse(Request.QueryString["IdPedido"]);
+            if (idPedido == "" && token == "")
             {
                 return RedirectToAction("ListadoPedidos");
             }
-            var elegirPedidoService = new ElegirPedidoService();
             try
             {
-                return View(elegirPedidoService.BuildElegirPedido(idPedido, (int)Session["idUsuario"]));
+                if (idPedido != "")
+                {
+                    return ElegirGustoPorIdUsuario(Int32.Parse(idPedido));
+                }
+                return ElegirGustosPorToken(new Guid(token));
             }
             catch (Exception e)
             {
@@ -239,6 +238,18 @@ namespace TresEmpanadas.Controllers
                     Link = ""
                 });
             }
+        }
+
+        internal ActionResult ElegirGustoPorIdUsuario(int idPedido)
+        {
+            var elegirPedidoService = new ElegirPedidoService();
+            return View(elegirPedidoService.BuildElegirPedido(idPedido, (int)Session["idUsuario"]));
+        }
+
+
+        internal ActionResult ElegirGustosPorToken(Guid token)
+        {
+            return null;
         }
 
         protected override void OnException(ExceptionContext filterContext)
