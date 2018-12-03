@@ -121,8 +121,22 @@ namespace TresEmpanadas.Services
             foreach (var gastosUsuario in usuariosInvitados) {
                 var listaEmpanadasUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                         (u => u.IdUsuario == gastosUsuario.IdUsuario && u.IdPedido == idPedido);
-                cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
-                gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                try
+                {
+                    cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
+                }
+                catch
+                {
+                    cantTotalUsu = 0;
+                }
+                try
+                {
+                    gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                }
+                catch
+                {
+                    gastoUsu = 0;
+                }
                 //var cantEmpUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                     //(c => c.IdPedido==idPedido && c.IdUsuario==gastosUsuario.IdUsuario).Sum(ca => ca.Cantidad);
                 foreach (var item in listaEmpanadasUsuario) {
@@ -132,12 +146,11 @@ namespace TresEmpanadas.Services
                     cantidadGustos.Add(item.Cantidad);
                 }
             }
-            
-            //pedidoBuscado.IdEstadoPedido = 2;
+            pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
 
-        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
+        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, int opcion_id)
         {
             //Busco el pedido a editar le limpio los gustos y le guardo los que selecciono 
             var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
@@ -180,21 +193,56 @@ namespace TresEmpanadas.Services
             }
             // Lista de invitaciones del pedido a editar
             var listaInvitacionesPedido = Contexto.InvitacionPedido.Where(ped => ped.IdPedido == pedidoBuscado.IdPedido).ToList();
+
             //Eliminar si el usuario fue quitado
-            foreach (var it in listaInvitacionesPedido) {
+            foreach (var it in listaInvitacionesPedido)
+            {
                 Boolean existeInvitado = false;
-                foreach (var it2 in usuariosInvitados) {
-                    
+                foreach (var it2 in usuariosInvitados)
+                {
                     var usu = Contexto.Usuario.Where(email => email.Email.Equals(it2)).First();
-                    if (it.IdUsuario == usu.IdUsuario) {
+
+                    if (opcion_id == 2)
+                    {
+                        InvitacionPedido invitacion = new InvitacionPedido();
+                        var guid = Guid.NewGuid();
+                        invitacion.Token = guid;
+                        this.enviarEmail(invitacion, usu, null);
+                    }
+
+                    if (it.IdUsuario == usu.IdUsuario)
+                    {
                         existeInvitado = true;
                     }
+                    else  // Nuevo Usuario
+                    {
+                        if (opcion_id == 3)
+                        {
+                            InvitacionPedido invitacion = new InvitacionPedido();
+                            var guid = Guid.NewGuid();
+                            invitacion.Token = guid;
+                            this.enviarEmail(invitacion, usu, null);
+                        }
+                    }
                 }
-                if (!existeInvitado) {
+                if (!existeInvitado)
+                {
                     Contexto.InvitacionPedido.Remove(it);
                     Contexto.SaveChanges();
                 }
 
+                if (opcion_id == 4)
+                {
+                    if (it.Completado == false)
+                    {
+                        var usuInvitacionPedido = Contexto.Usuario.Where(u => u.IdUsuario == it.IdUsuario).First();
+
+                        InvitacionPedido invitacion = new InvitacionPedido();
+                        var guid = Guid.NewGuid();
+                        invitacion.Token = guid;
+                        this.enviarEmail(invitacion, usuInvitacionPedido, null);
+                    }
+                }
             }
             //Debe crear invitacion solo si la invitacion no existe 
             if (usuariosInvitados != null)
@@ -242,10 +290,11 @@ namespace TresEmpanadas.Services
             var link = "";
 
             if (responsable != null)
-                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + responsable;
+                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/ElegirGusto/" + responsable;
             else
-                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + inv.Token;
-            mail.Body = "<a href=" + link + ">" + link + "</a>";
+                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/ElegirGusto/?token=" + inv.Token;
+            mail.Body = "<h2>Recibiste una invitación para ver un pedido!</h2>" +
+                "<a href=" + link + ">" + link + "</a>";
             mail.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
             smtp.UseDefaultCredentials = false;
@@ -445,16 +494,17 @@ namespace TresEmpanadas.Services
             return pedidoDetalle;
         }
 
+        public Pedido BuscarPedido(Guid token)
+        {
+            var pedidoDetalle = Contexto.InvitacionPedido.Find(token);
+            return Contexto.Pedido.Find(pedidoDetalle.IdPedido);
+        }
+
         public int CantidadEmpanadas(int id)
         {
             var pedidos = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(
                 inv => inv.IdPedido == id);
             return pedidos.Sum(p => p.Cantidad);
-        }
-        public string[] CargarOpciones()
-        {
-            string[] opciones = { "A Nadie", "Re-enviar Invitación a Todos", "Enviar sólo a los Nuevos", "Re - enviar sólo a los que no eligieron gustos" };
-            return opciones;
         }
 
         public List<UsuariosInvitados> UsuariosInvitados(int pedidoId)
@@ -477,9 +527,6 @@ namespace TresEmpanadas.Services
             }
             return usuariosInvitados;
         }
-
-
-
 
     }
 }

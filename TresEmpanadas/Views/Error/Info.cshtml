@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Error";
-    Layout = "_BaseLayout";
+    Layout = "~/Views/Shared/_BaseLayout.cshtml";
 }
 
 <div class="jumbotron">
@@ -10,7 +10,7 @@
     <p class="lead">@Model.Body</p>
     <hr class="my-4">
     <p class="lead">
-        <a class="btn btn-primary btn-lg" href="~/Index" role="button">Continuar</a>
+        <a class="btn btn-primary btn-lg" href="~/Home/Index" role="button">Continuar</a>
         @if (@Model.Link != "")
         {
             <a class="btn btn-primary btn-lg" href="@Model.Link" role="button">Continuar</a>

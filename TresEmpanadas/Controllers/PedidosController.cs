@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using System.Web;
 using System.Web.Mvc;
 using TresEmpanadas.Models;
@@ -21,7 +22,8 @@ namespace TresEmpanadas.Controllers
             {
                 //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
                 ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                var usuariosDisponibles = servicioUsuario.ListarUsuariosParaInvitar((int)Session["idUsuario"]);
+                ViewBag.usuariosDisponibles = usuariosDisponibles;
                     if (idPedido == null)
                     {
                         ViewBag.conModelo = false;
@@ -174,9 +176,8 @@ namespace TresEmpanadas.Controllers
             {
                 try
                 {
-                    ViewBag.opciones = servicioPedido.CargarOpciones();
                     ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuariosParaInvitar((int)Session["idUsuario"]);
                     ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados(idPedido);
                     ViewBag.conModelo = true;
                     int idParametro = (int)idPedido;
@@ -185,7 +186,7 @@ namespace TresEmpanadas.Controllers
                 }
                 catch
                 {
-                    return View("Error/Info", new DetailError
+                    return View("../Error/Info", new DetailError
                     {
                         Title = "Error",
                         Body = "No fue posible editar el pedido.",
@@ -204,41 +205,71 @@ namespace TresEmpanadas.Controllers
             }
         }
         [HttpPost]
-        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
+        public ActionResult EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, int opcion_id)
         {
 
-            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, cat);
+            servicioPedido.EditarPedido(pedido, gustos, usuariosInvitados, opcion_id);
             return RedirectToAction("ListadoPedidos");
         }
 
-        public ActionResult ElegirGustos()
+        [HttpGet]
+        public ActionResult ElegirGustos(string idPedido = "", string token = "")
         {
-            int idPedido;
-            try
-            {
-
-                idPedido = Int32.Parse(Request.QueryString["IdPedido"]);
-            }
-            catch
+            if (idPedido == "" && token == "")
             {
                 return RedirectToAction("ListadoPedidos");
             }
-            var elegirPedidoService = new ElegirPedidoService();
             try
             {
-                return View(elegirPedidoService.BuildElegirPedido(idPedido, (int)Session["idUsuario"]));
+                if (idPedido != "")
+                {
+                    return ElegirGustoPorIdUsuario(Int32.Parse(idPedido));
+                }
+                return ElegirGustosPorToken(new Guid(token));
+            }
+            catch (AuthenticationException ae)
+            {
+                return View("../Error/Info", new DetailError
+                {
+                    Title = "Error",
+                    Body = String.Format("No fue posible ver el pedido: {0}.", ae.Message),
+                    Link = ""
+                });
+            }
+            catch (FormatException fe)
+            {
+                return View("../Error/Info", new DetailError
+                {
+                    Title = "Error",
+                    Body = String.Format("Token inválido: {0}.", fe.Message),
+                    Link = ""
+                });
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.GetType());
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
-                return View("~/Views/Error/Info", new DetailError
+                return View("../Error/Info", new DetailError
                 {
                     Title = "Error",
                     Body = "No fue posible actualizar el pedido.",
                     Link = ""
                 });
             }
+        }
+
+        internal ActionResult ElegirGustoPorIdUsuario(int idPedido)
+        {
+            var elegirPedidoService = new ElegirPedidoService();
+            return View(elegirPedidoService.BuildElegirGusto(idPedido, (int)Session["idUsuario"]));
+        }
+
+
+        internal ActionResult ElegirGustosPorToken(Guid token)
+        {
+            var elegirPedidoService = new ElegirPedidoService();
+            return View(elegirPedidoService.BuildElegirGusto(token, (int)Session["idUsuario"]));
         }
 
         protected override void OnException(ExceptionContext filterContext)
