@@ -20,5 +20,16 @@ namespace TresEmpanadas.Services
             return Entities.Usuario.Single(us => us.IdUsuario == id);
         }
 
+        public MultiSelectList ListarUsuariosParaInvitar(int idUsuario)
+        {
+            List<Usuario> usuariosTotales = Entities.Usuario.ToList();
+            var usuariosDeshabilitados = new List<Usuario>
+            {
+                GetUsuario(idUsuario)
+            };
+            var usuariosDisponibles = usuariosTotales.Except(usuariosDeshabilitados);
+            return new MultiSelectList(usuariosDisponibles, "IdUsuario", "Email", new List<Usuario> { }, usuariosDeshabilitados);
+        }
+
     }
 }

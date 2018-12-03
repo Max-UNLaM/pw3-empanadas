@@ -21,7 +21,8 @@ namespace TresEmpanadas.Controllers
             {
                 //System.Web.HttpContext.Current.Session["IdUsuario"] = 1;
                 ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                var usuariosDisponibles = servicioUsuario.ListarUsuariosParaInvitar((int)Session["idUsuario"]);
+                ViewBag.usuariosDisponibles = usuariosDisponibles;
                     if (idPedido == null)
                     {
                         ViewBag.conModelo = false;
@@ -175,7 +176,7 @@ namespace TresEmpanadas.Controllers
                 try
                 {
                     ViewBag.gustosEmpanadas = servicioPedido.ListarGustosEmpanadas();
-                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuarios();
+                    ViewBag.usuariosDisponibles = servicioUsuario.ListarUsuariosParaInvitar((int)Session["idUsuario"]);
                     ViewBag.usuariosInvitados = servicioPedido.UsuariosInvitados(idPedido);
                     ViewBag.conModelo = true;
                     int idParametro = (int)idPedido;

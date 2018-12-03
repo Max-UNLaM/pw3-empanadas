@@ -26,7 +26,9 @@ namespace TresEmpanadas
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
             bundles.Add(new StyleBundle("~/bundles/pedido").Include(
-                                        "~/Scripts/Pedidos/editar-pedido.js","~/Scripts/Pedidos/eliminar-confirmar.js"));
+                                        "~/Scripts/Pedidos/editar-pedido.js",
+                                        "~/Scripts/Pedidos/validar-pedido.js",
+                                        "~/Scripts/Pedidos/eliminar-confirmar.js"));
         }
     }
 }
