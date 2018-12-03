@@ -137,7 +137,7 @@ namespace TresEmpanadas.Services
             Contexto.SaveChanges();
         }
 
-        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, string cat)
+        public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, int opcion_id)
         {
             //Busco el pedido a editar le limpio los gustos y le guardo los que selecciono 
             var pedidoBuscado = BuscarPedidoPorId(pedido.IdPedido);
@@ -180,21 +180,56 @@ namespace TresEmpanadas.Services
             }
             // Lista de invitaciones del pedido a editar
             var listaInvitacionesPedido = Contexto.InvitacionPedido.Where(ped => ped.IdPedido == pedidoBuscado.IdPedido).ToList();
+
             //Eliminar si el usuario fue quitado
-            foreach (var it in listaInvitacionesPedido) {
+            foreach (var it in listaInvitacionesPedido)
+            {
                 Boolean existeInvitado = false;
-                foreach (var it2 in usuariosInvitados) {
-                    
+                foreach (var it2 in usuariosInvitados)
+                {
                     var usu = Contexto.Usuario.Where(email => email.Email.Equals(it2)).First();
-                    if (it.IdUsuario == usu.IdUsuario) {
+
+                    if (opcion_id == 2)
+                    {
+                        InvitacionPedido invitacion = new InvitacionPedido();
+                        var guid = Guid.NewGuid();
+                        invitacion.Token = guid;
+                        this.enviarEmail(invitacion, usu, null);
+                    }
+
+                    if (it.IdUsuario == usu.IdUsuario)
+                    {
                         existeInvitado = true;
                     }
+                    else  // Nuevo Usuario
+                    {
+                        if (opcion_id == 3)
+                        {
+                            InvitacionPedido invitacion = new InvitacionPedido();
+                            var guid = Guid.NewGuid();
+                            invitacion.Token = guid;
+                            this.enviarEmail(invitacion, usu, null);
+                        }
+                    }
                 }
-                if (!existeInvitado) {
+                if (!existeInvitado)
+                {
                     Contexto.InvitacionPedido.Remove(it);
                     Contexto.SaveChanges();
                 }
 
+                if (opcion_id == 4)
+                {
+                    if (it.Completado == false)
+                    {
+                        var usuInvitacionPedido = Contexto.Usuario.Where(u => u.IdUsuario == it.IdUsuario).First();
+
+                        InvitacionPedido invitacion = new InvitacionPedido();
+                        var guid = Guid.NewGuid();
+                        invitacion.Token = guid;
+                        this.enviarEmail(invitacion, usuInvitacionPedido, null);
+                    }
+                }
             }
             //Debe crear invitacion solo si la invitacion no existe 
             if (usuariosInvitados != null)
@@ -450,11 +485,6 @@ namespace TresEmpanadas.Services
             var pedidos = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(
                 inv => inv.IdPedido == id);
             return pedidos.Sum(p => p.Cantidad);
-        }
-        public string[] CargarOpciones()
-        {
-            string[] opciones = { "A Nadie", "Re-enviar Invitación a Todos", "Enviar sólo a los Nuevos", "Re - enviar sólo a los que no eligieron gustos" };
-            return opciones;
         }
 
         public List<UsuariosInvitados> UsuariosInvitados(int pedidoId)
