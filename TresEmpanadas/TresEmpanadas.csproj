@@ -265,6 +265,7 @@
     <Content Include="Content\Images\sliders\800_400empa1.jpg" />
     <Content Include="Content\Images\sliders\800_400empa2.jpg" />
     <Content Include="Content\Images\sliders\800_400empa3.jpg" />
+    <Content Include="Content\Stylesheet\Validaciones.css" />
     <Content Include="Entitie.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Entitie.edmx</DependentUpon>
