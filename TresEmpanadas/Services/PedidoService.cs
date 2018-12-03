@@ -277,9 +277,9 @@ namespace TresEmpanadas.Services
             var link = "";
 
             if (responsable != null)
-                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + responsable;
+                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/ElegirGusto/" + responsable;
             else
-                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/elegir/" + inv.Token;
+                link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/ElegirGusto/?token=" + inv.Token;
             mail.Body = "<a href=" + link + ">" + link + "</a>";
             mail.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
@@ -478,6 +478,12 @@ namespace TresEmpanadas.Services
         {
             var pedidoDetalle = Contexto.Pedido.Find(idPedido);
             return pedidoDetalle;
+        }
+
+        public Pedido BuscarPedido(Guid token)
+        {
+            var pedidoDetalle = Contexto.InvitacionPedido.Find(token);
+            return Contexto.Pedido.Find(pedidoDetalle.IdPedido);
         }
 
         public int CantidadEmpanadas(int id)
