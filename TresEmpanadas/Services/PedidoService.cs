@@ -121,8 +121,22 @@ namespace TresEmpanadas.Services
             foreach (var gastosUsuario in usuariosInvitados) {
                 var listaEmpanadasUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                         (u => u.IdUsuario == gastosUsuario.IdUsuario && u.IdPedido == idPedido);
-                cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
-                gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                try
+                {
+                    cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
+                }
+                catch
+                {
+                    cantTotalUsu = 0;
+                }
+                try
+                {
+                    gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                }
+                catch
+                {
+                    gastoUsu = 0;
+                }
                 //var cantEmpUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                     //(c => c.IdPedido==idPedido && c.IdUsuario==gastosUsuario.IdUsuario).Sum(ca => ca.Cantidad);
                 foreach (var item in listaEmpanadasUsuario) {
@@ -132,8 +146,7 @@ namespace TresEmpanadas.Services
                     cantidadGustos.Add(item.Cantidad);
                 }
             }
-            
-            //pedidoBuscado.IdEstadoPedido = 2;
+            pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
 
@@ -280,7 +293,8 @@ namespace TresEmpanadas.Services
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/ElegirGusto/" + responsable;
             else
                 link = HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Pedidos/ElegirGusto/?token=" + inv.Token;
-            mail.Body = "<a href=" + link + ">" + link + "</a>";
+            mail.Body = "<h2>Recibiste una invitación para ver un pedido!</h2>" +
+                "<a href=" + link + ">" + link + "</a>";
             mail.IsBodyHtml = true;
             SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
             smtp.UseDefaultCredentials = false;
@@ -513,9 +527,6 @@ namespace TresEmpanadas.Services
             }
             return usuariosInvitados;
         }
-
-
-
 
     }
 }
