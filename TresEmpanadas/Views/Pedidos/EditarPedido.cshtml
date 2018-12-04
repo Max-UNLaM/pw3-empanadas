@@ -36,32 +36,10 @@
                     <option value="4">Re-enviar sólo a los que no eligieron gustos</option>
                 </select>
             </div>
-            @*<div class="form-group">
-                    @Html.LabelFor(model => model.InvitacionPedido, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.DropDownListFor(model => model.InvitacionPedido, ((MultiSelectList)ViewBag.usuariosDisponibles), htmlAttributes: new { @class = "form-control", multiple = "multiple" })
-                        @Html.ValidationMessageFor(model => model.InvitacionPedido, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
-
         </div>
         <div class="form-row">
             @Html.HiddenFor(model => model.FechaCreacion)
-            @* @Html.EditorFor(model=>model.FechaCreacion)
-                @*<div class="form-group">
-                    @Html.LabelFor(model => model.FechaCreacion, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-12">
-                        @Html.EditorFor(model => model.FechaCreacion, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.FechaCreacion, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
-            @*<div class="form-group">
-                    @Html.LabelFor(model => model.FechaModificacion, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-12">
-                        @Html.EditorFor(model => model.FechaModificacion, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.FechaModificacion, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
+            
             <div class="form-group">
                 @Html.LabelFor(model => model.PrecioUnidad, htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-12">
@@ -116,56 +94,12 @@
                             <span id="selectGustos-error" class="val-hidden val-error-message">Es necesario elegir un gusto</span>
                         </span>
                     </div>
-                    @*@Html.LabelFor(model => model.GustoEmpanada, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-12">
-                            <select name="gustos[]" multiple="multiple" size="7" class="form-control">
-                                <option value="" disabled class="alert-info" draggable="true">Seleccione el sabor</option>
-                                @foreach (var item in (Model.GustoEmpanada))
-                                {
-                                    <option value="@item.IdGustoEmpanada" selected>@item.Nombre</option>
-                                }
-                            </select>
-
-                        </div>*@
-                </div>
+                 </div>
             </div>
             <div class="col-md-8">
                 <div class="form-group">
                     <div class="row">
-                        @*@Html.Label(" UsuariosInvitados", htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-12">
-                                <select name="usuariosInvitados" multiple="multiple" class="form-control">
-                                    <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                                    @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
-                                    {
-                                        <option value="@Items.Value" spellcheck="true">@Items.Text</option>
-                                    }
-                                </select>
-                                <br />
-                            </div>
-
-                            Nuevo Invitado :
-
-                            @Html.TextBox("nuevoUsuario")*@
-                        @*<div class="col-md-6 flex-column">
-                                @Html.Label("Invitados", htmlAttributes: new { @class = "control-label" }) <br>
-                                <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]">
-                                    <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                                    @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
-                                    {
-                                        <option value="@Items.Text" spellcheck="true">@Items.Text</option>
-                                    }
-                                </select>
-                            </div>
-                            <div class="col-md-6">
-                                <ul class="list-group">
-                                    <li class="list-group-item">Usuarios ya invitados</li>
-                                    @foreach (var usr in ViewBag.usuariosInvitados)
-                                    {
-                                        <li class="list-group-item">@usr.Email - <span class="badge badge-info">@usr.Estado</span></li>
-                                    }
-                                </ul>
-                            </div>*@
+                      
                         <div class="col-md-6 flex-column">
                             @Html.Label("Invitados", htmlAttributes: new { @class = "control-label" }) <br>
                             <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]" required="required">

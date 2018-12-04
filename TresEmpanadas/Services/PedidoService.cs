@@ -150,7 +150,7 @@ namespace TresEmpanadas.Services
                   cantidadGustos.Add(item.Cantidad);
                 }
             }
-            pedidoBuscado.IdEstadoPedido = 2;
+            //pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
 
@@ -202,6 +202,7 @@ namespace TresEmpanadas.Services
             foreach (var it in listaInvitacionesPedido)
             {
                 Boolean existeInvitado = false;
+                Boolean seEnvioResponsable = false;
                 foreach (var it2 in usuariosInvitados)
                 {
                     var usu = Contexto.Usuario.Where(email => email.Email.Equals(it2)).First();
@@ -231,8 +232,11 @@ namespace TresEmpanadas.Services
                 }
                 if (!existeInvitado)
                 {
-                    Contexto.InvitacionPedido.Remove(it);
-                    Contexto.SaveChanges();
+                    if (pedidoBuscado.IdUsuarioResponsable != it.IdUsuario)
+                    {
+                        Contexto.InvitacionPedido.Remove(it);
+                        Contexto.SaveChanges();
+                    }
                 }
 
                 if (opcion_id == 4)

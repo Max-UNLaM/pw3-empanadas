@@ -1,4 +1,4 @@
-﻿"use strict";
+﻿//"use strict";
 
 let formElements = {
     invitadosMultiselect: document.getElementById('js-prueba'),
@@ -8,10 +8,16 @@ let formElements = {
 }
 
 function validateForm() {
-    let valid = false;
+    //let valid = false;
     resetErrors();
-    validateMultiSelect();
-    return valid;
+    let multi = validateMultiSelect();
+    let gusto = validateGustos();
+    if (multi === true && gusto === true) {
+        return true
+    } else {
+        return false
+    }
+    //return valid;
 }
 
 function resetErrors() {
@@ -22,13 +28,17 @@ function resetErrors() {
 }
 
 function validateMultiSelect() {
-    if (formElements.invitadosMultiselect.value === '') {
+    if (formElements.invitadosMultiselect.value == '') {
         formElements.invitadosError.classList.remove('val-hidden')
+        return false
     }
+    return true
 }
 
 function validateGustos() {
-    if (formElements.selectGustos.value === '') {
+    if (formElements.selectGustos.value == '') {
         formElements.selectGustosError.classList.remove('val-hidden')
+        return false
     }
+    return true
 }
