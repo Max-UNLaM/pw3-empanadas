@@ -121,15 +121,17 @@ namespace TresEmpanadas.Services
             foreach (var gastosUsuario in usuariosInvitados) {
                 var listaEmpanadasUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                         (u => u.IdUsuario == gastosUsuario.IdUsuario && u.IdPedido == idPedido);
-                cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
-                gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                if (listaEmpanadasUsuario.ToList().Count != 0){
+                    cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
+                    gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                }
                 //var cantEmpUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                     //(c => c.IdPedido==idPedido && c.IdUsuario==gastosUsuario.IdUsuario).Sum(ca => ca.Cantidad);
                 foreach (var item in listaEmpanadasUsuario) {
                   var nombreGustos = Contexto.GustoEmpanada.Where
                                  (g => g.IdGustoEmpanada == item.IdGustoEmpanada).Select(nom => nom.Nombre).FirstOrDefault();
                   listaGustos.Add(nombreGustos);
-                    cantidadGustos.Add(item.Cantidad);
+                  cantidadGustos.Add(item.Cantidad);
                 }
             }
             
