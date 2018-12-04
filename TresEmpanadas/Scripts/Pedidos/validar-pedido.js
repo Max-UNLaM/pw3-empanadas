@@ -11,6 +11,7 @@ function validateForm() {
     let valid = false;
     resetErrors();
     validateMultiSelect();
+    validateGustos();
     return valid;
 }
 

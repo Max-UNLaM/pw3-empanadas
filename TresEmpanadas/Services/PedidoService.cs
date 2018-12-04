@@ -150,7 +150,7 @@ namespace TresEmpanadas.Services
                   cantidadGustos.Add(item.Cantidad);
                 }
             }
-            pedidoBuscado.IdEstadoPedido = 2;
+            //pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
 
