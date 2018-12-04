@@ -23,6 +23,9 @@ function agregarGusto() {
 
 function eliminarFila() {
     let cantidadFilas = editarPedidoElements.tablaAltaGustos.rows.length;
+    if (cantidadFilas === 1) {
+        return;
+    }
     editarPedidoElements.tablaAltaGustos.deleteRow(cantidadFilas - 1)
 }
 
