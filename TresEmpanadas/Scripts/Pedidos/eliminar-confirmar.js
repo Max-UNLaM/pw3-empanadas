@@ -64,10 +64,33 @@
     //        required: "<h4>El campo es obligatorio</h4>"
     //    }
     //})
-    $('#btnConfirmar').click(function () {
-         var idPedido;
+
+    //$('#btnConfirmar').click(function () {
+    //     var idPedido;
+    //    idPedido = $("#IdHidden").val();
+    //    var valorElegido = confirm("¿Está seguro que desea Confirmar el pedido? Una vez confirmado no se podrá modificar.");
+    //    if (valorElegido) {
+    //        $.ajax({
+    //            url: "/Pedidos/CerrarPedido",
+    //            type: "GET",
+    //            data: { idPedido: idPedido },
+    //            success: function(){
+    //                 window.location.replace("/Pedidos/ListadoPedidos");
+                    
+    //            },
+    //            error: function (x, y, z) {
+    //                url = "/ListadoPedidos"
+    //                window.location.href = url;
+    //                alert("No se pudo eliminar!");
+    //                alert(x + y + z);
+    //            }
+    //        });
+    //    }
+    //});
+    $("#btnConfirmar").click(function () {
+        var idPedido;
         idPedido = $("#IdHidden").val();
-        var valorElegido = confirm("¿Está seguro que desea Confirmar el pedido? Una vez confirmado no se podrá modificar.");
+        var valorElegido = confirm("Esta seguro que desea Confirmar");
         if (valorElegido) {
             $.ajax({
                 url: "/Pedidos/CerrarPedido",
@@ -76,6 +99,7 @@
                 success: function (result) {
                     if (result == 1) {
                         window.location.replace("/Pedidos/ListadoPedidos");
+                        alert("OK!");
                     }
                 },
                 error: function (x, y, z) {

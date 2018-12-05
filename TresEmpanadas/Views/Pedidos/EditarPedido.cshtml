@@ -102,21 +102,24 @@
                       
                         <div class="col-md-6 flex-column">
                             @Html.Label("Invitados", htmlAttributes: new { @class = "control-label" }) <br>
-                            <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]" required="required">
-                                <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
-                                @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles))
-                                {
-                                    foreach (var usr in ViewBag.usuariosInvitados)
-                                    {
-                                        if (Items.Text.Equals(usr.Email))
-                                        {
-                                            <option value="@Items.Text" selected>@Items.Text</option>
-                                            break;
-                                        }
-                                    }
-                                    <option value="@Items.Text" spellcheck="true">@Items.Text</option>
-                                }
-                            </select>
+                                        <select class="form-control" multiple="multiple" id="js-prueba" name="usuariosInvitados[]" required="required">
+                                            <option value="" disabled class="alert-info">Seleccione a sus invitados</option>
+                                            @foreach (var Items in ((MultiSelectList)ViewBag.usuariosDisponibles)){
+                                                    Boolean fueElegido = false;
+                                                     foreach (var usr in ViewBag.usuariosInvitados){
+                                                       if (Items.Text.Equals(usr.Email)){
+                                                           fueElegido = true;
+                                                       }
+                                                     }   
+                                                     if (fueElegido) {
+                                                       <option value="@Items.Text" selected>@Items.Text</option>
+                                                     }
+                                                     else {
+                                                       <option value="@Items.Text" spellcheck="true">@Items.Text</option>
+                                                     }
+
+                                             }
+                                         </select>
                             <span class="text-danger field-validation-error" data-valmsg-for="UsuariosInvitados" data-valmsg-replace="true">
                                 <span id="invitados-error" class="val-hidden val-error-message">Usuarios invitados requeridos</span>
                             </span>
@@ -142,7 +145,7 @@
         <input type="hidden" value=@Model.IdPedido id="IdHidden" />
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Confirmar" id="btnConfirmar" class="btn btn-success" />
+                <input type="button" value="Confirmar" id="btnConfirmar" class="btn btn-success" onclick="" />
             </div>
         </div>
     </div>

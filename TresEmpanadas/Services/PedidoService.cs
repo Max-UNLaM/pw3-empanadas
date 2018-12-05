@@ -106,10 +106,8 @@ namespace TresEmpanadas.Services
             var cantEmp = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where(i => i.IdPedido == idPedido).ToList().Count;
             var cantEmpSumadas = 0;
             var precioTotal = 0;
-            var cantTotalUsu = 0;
-            var gastoUsu = 0;
-            var listaGustos = new List<string>();
-            var cantidadGustos = new List<int>();
+            var listaInvitadoPrecio = new List<DetalleEmailCerrado>();
+
             if (cantEmp != 0)
             {
                 cantEmpSumadas = Contexto.InvitacionPedidoGustoEmpanadaUsuario
@@ -119,6 +117,12 @@ namespace TresEmpanadas.Services
                 precioTotal = (pedidoBuscado.PrecioDocena * cantDocena) + (pedidoBuscado.PrecioUnidad * cantInd); 
             }
             foreach (var gastosUsuario in usuariosInvitados) {
+                var cantTotalUsu = 0;
+                var gastoUsu = 0;
+                var listaGustos = new List<string>();
+                var cantidadGustos = new List<int>();
+                var invitadoPrecio = new DetalleEmailCerrado();
+                invitadoPrecio.usuarioInvitado = Contexto.Usuario.Where(i => i.IdUsuario == gastosUsuario.IdUsuario).Select(il => il.Email).FirstOrDefault();
                 var listaEmpanadasUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
                                         (u => u.IdUsuario == gastosUsuario.IdUsuario && u.IdPedido == idPedido);
                 try
@@ -132,27 +136,119 @@ namespace TresEmpanadas.Services
                 try
                 {
                     gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
+                    invitadoPrecio.precioAbonar = gastoUsu;
                 }
                 catch
                 {
                     gastoUsu = 0;
+                    invitadoPrecio.precioAbonar = gastoUsu;
+
                 }
                 //if (listaEmpanadasUsuario.ToList().Count != 0){
                 //    cantTotalUsu = listaEmpanadasUsuario.Sum(can => can.Cantidad);
                 //    gastoUsu = (precioTotal / cantEmpSumadas) * cantTotalUsu;
                 //}
                 //var cantEmpUsuario = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Where
-                                    //(c => c.IdPedido==idPedido && c.IdUsuario==gastosUsuario.IdUsuario).Sum(ca => ca.Cantidad);
+                //(c => c.IdPedido==idPedido && c.IdUsuario==gastosUsuario.IdUsuario).Sum(ca => ca.Cantidad);
                 foreach (var item in listaEmpanadasUsuario) {
                   var nombreGustos = Contexto.GustoEmpanada.Where
                                  (g => g.IdGustoEmpanada == item.IdGustoEmpanada).Select(nom => nom.Nombre).FirstOrDefault();
                   listaGustos.Add(nombreGustos);
                   cantidadGustos.Add(item.Cantidad);
                 }
+                var usuario = Contexto.Usuario.Where(user => user.IdUsuario == gastosUsuario.IdUsuario).First();
+                EnviarEmailInvitados(listaGustos, cantidadGustos, cantTotalUsu,gastoUsu, usuario);
+
+                listaInvitadoPrecio.Add(invitadoPrecio);
+                
             }
+            var responsable = Contexto.Usuario.Where(i => i.IdUsuario == pedidoBuscado.IdUsuarioResponsable).Select(il => il.Email).FirstOrDefault();
+            EnviarEmailResponsable(precioTotal, listaInvitadoPrecio, responsable);
             //pedidoBuscado.IdEstadoPedido = 2;
             Contexto.SaveChanges();
         }
+        public void EnviarEmailResponsable(float precioTotal, List<DetalleEmailCerrado> listaInvitadoPrecio, string email)
+        {
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("mailer@fragua.com.ar");
+
+            mail.To.Add(email);
+
+
+            mail.Subject = "Pedido en TresEmpanadas";
+            var lisInviPrecio = "";
+            foreach (var it in listaInvitadoPrecio)
+            {
+                lisInviPrecio += "<h4>Email : " + it.usuarioInvitado + " Precio a Abonar :" + it.precioAbonar + " </h4>" + "</br>";
+            }
+
+            mail.Body = "<h2>El pedido se ha Cerrado!</h2>" +
+                        "<h4> Detalle Recaudacion: "
+                        + "<h4> Precio Total: $" + precioTotal + "pesos </h4> " +
+                                "<h3>Invitados:</h3>" + lisInviPrecio ;
+
+            //mail.Body = "<h2>El pedido se ha Cerrado!</h2>" +
+            //           "<h4> Usted ha comprado: " + cantTotalUsu + " empanadas </h4>"
+            //           + "<h4> Usted ha gastado: $" + gastoUsu + "pesos </h4> " + listgusto;
+
+
+
+            mail.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential("mailer@fragua.com.ar", "mailerloco");
+            smtp.EnableSsl = false;
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+        public void EnviarEmailInvitados(List<string> listaGustos, List<int> cantidadGustos, int cantTotalUsu, int gastoUsu, Usuario usu) {
+            MailMessage mail = new MailMessage();
+            mail.From = new MailAddress("mailer@fragua.com.ar");
+
+            mail.To.Add(usu.Email);
+
+
+            mail.Subject = "Pedido en TresEmpanadas";
+            var listgusto = "";
+            for (var i = 0; i < listaGustos.Count; i++)
+            {
+                listgusto += "<h4>Gusto : " + listaGustos[i] + " Cantidad :" + cantidadGustos[i] + " </h4>" + "</br>" ;
+            }
+
+            mail.Body = "<h2>El pedido se ha Cerrado!</h2>" +
+                        "<h4> Usted ha comprado: " + cantTotalUsu + " empanadas </h4>"
+                        + "<h4> Usted ha gastado: $" + gastoUsu + "pesos </h4> " +
+                                "<h3>Gustos y cantidad elegidas:</h3>"+  listgusto;
+
+            //mail.Body = "<h2>El pedido se ha Cerrado!</h2>" +
+            //           "<h4> Usted ha comprado: " + cantTotalUsu + " empanadas </h4>"
+            //           + "<h4> Usted ha gastado: $" + gastoUsu + "pesos </h4> " + listgusto;
+
+
+
+            mail.IsBodyHtml = true;
+            SmtpClient smtp = new SmtpClient("mail.fragua.com.ar", 26);
+            smtp.UseDefaultCredentials = false;
+            smtp.Credentials = new NetworkCredential("mailer@fragua.com.ar", "mailerloco");
+            smtp.EnableSsl = false;
+            try
+            {
+                smtp.Send(mail);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+            }
+        }
+
 
         public void EditarPedido(Pedido pedido, int?[] gustos, string[] usuariosInvitados, int opcion_id)
         {
@@ -202,7 +298,7 @@ namespace TresEmpanadas.Services
             foreach (var it in listaInvitacionesPedido)
             {
                 Boolean existeInvitado = false;
-                Boolean seEnvioResponsable = false;
+                //Boolean seEnvioResponsable = false;
                 foreach (var it2 in usuariosInvitados)
                 {
                     var usu = Contexto.Usuario.Where(email => email.Email.Equals(it2)).First();
@@ -274,7 +370,7 @@ namespace TresEmpanadas.Services
                         invitacion.IdUsuario = usu.IdUsuario;
                         invitacion.IdPedido = pedido.IdPedido;
                         invitacion.Token = guid;
-                        invitacion.Completado = true;
+                        invitacion.Completado = false;
                         Contexto.InvitacionPedido.Add(invitacion);
                         Contexto.SaveChanges();
                     }
@@ -471,10 +567,10 @@ namespace TresEmpanadas.Services
                                                      .Where(invUsuPed => invUsuPed.IdPedido == idPedido).ToList();
             foreach (var item in listaInvitacionGustoEmpanadaPedido)
             {
-                InvitacionPedido invitacionGustoUsuarioEliminar = Contexto.InvitacionPedido.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
+                InvitacionPedidoGustoEmpanadaUsuario invitacionGustoUsuarioEliminar = Contexto.InvitacionPedidoGustoEmpanadaUsuario.Find(item.IdInvitacionPedidoGustoEmpanadaUsuario);
                 if (invitacionGustoUsuarioEliminar != null)
                 {
-                    Contexto.InvitacionPedido.Remove(invitacionGustoUsuarioEliminar);
+                    Contexto.InvitacionPedidoGustoEmpanadaUsuario.Remove(invitacionGustoUsuarioEliminar);
                     Contexto.SaveChanges();
                 }
             }

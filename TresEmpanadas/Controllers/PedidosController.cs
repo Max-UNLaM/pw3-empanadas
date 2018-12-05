@@ -66,9 +66,13 @@ namespace TresEmpanadas.Controllers
             }
         }
         public ActionResult CerrarPedido(int idPedido) {
-             servicioPedido.CerrarPedido(idPedido);
-            var result = 1;
-            return Json(result, JsonRequestBehavior.AllowGet);
+            
+            var valor = servicioPedido.BuscarPedidoPorId(idPedido);
+            if (valor.IdEstadoPedido == 1)
+            {
+                servicioPedido.CerrarPedido(idPedido);
+            }
+            return RedirectToAction("ListadoPedidos");
         }
         //Listado Pedidos
         public ActionResult ListadoPedidos()
