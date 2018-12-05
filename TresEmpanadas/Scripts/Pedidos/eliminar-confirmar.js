@@ -70,7 +70,7 @@
 function confirmar() {
     var idPedido;
     idPedido = $("#IdHidden").val();
-    if (confirm("Esta seguro que desea Confirmar")) {
+    if (confirm("¿Está seguro que desea Confirmar el pedido? Una vez confirmado no se podrá modificar.")) {
         $.ajax({
             url: "/Pedidos/CerrarPedido",
             type: "GET",
