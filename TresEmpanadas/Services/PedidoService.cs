@@ -179,13 +179,13 @@ namespace TresEmpanadas.Services
             var lisInviPrecio = "";
             foreach (var it in listaInvitadoPrecio)
             {
-                lisInviPrecio += "<h4>Email : " + it.usuarioInvitado + " Precio a Abonar :" + it.precioAbonar + " </h4>" + "</br>";
+                lisInviPrecio += "<h4>Email: " + it.usuarioInvitado + " Precio a Abonar: " + it.precioAbonar + " </h4>" + "</br>";
             }
 
             mail.Body = "<h2>El pedido se ha Cerrado!</h2>" +
                         "<h4> Detalle Recaudacion: "
-                        + "<h4> Precio Total: $" + precioTotal + "pesos </h4> " +
-                                "<h3>Invitados:</h3>" + lisInviPrecio ;
+                        + "<h4> Precio Total: $" + precioTotal + " pesos </h4> " +
+                                "<h3>Invitados:</h3> " + lisInviPrecio ;
 
             //mail.Body = "<h2>El pedido se ha Cerrado!</h2>" +
             //           "<h4> Usted ha comprado: " + cantTotalUsu + " empanadas </h4>"
